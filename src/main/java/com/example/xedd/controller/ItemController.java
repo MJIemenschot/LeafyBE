@@ -28,8 +28,8 @@ public class ItemController {
     @Autowired
     ItemService itemService;
 
-    @Autowired
-    FileStorageService fileStorageService;
+//    @Autowired
+//    FileStorageService fileStorageService;
 
     private List<Item> items = new ArrayList<>();
 
@@ -42,13 +42,13 @@ public class ItemController {
 
 
     //build create item rest api
-    @PostMapping(value = "/upload")
+    @PostMapping("")
     public ResponseEntity<Object> createItem(@RequestParam String name,
                                          @RequestParam String description,
                                          @RequestParam boolean isSeed,
                                          @RequestParam MultipartFile toPicture) {
         try {
-            fileStorageService.uploadFile(toPicture);
+            itemService.uploadFile(toPicture);
 
             Item item = new Item();
             item.setName(name);

@@ -28,7 +28,7 @@ public class FileStorageServiceImpl implements FileStorageService{
 
     @Value("${app.upload.dir:${user.home}}")
     private String uploadDirectory;  // relative to root
-    private final Path uploads = Paths.get("./uploads");
+    private final Path uploads = Paths.get(".\\uploads");
 
     @Override
     public void uploadFile(MultipartFile toPicture) {

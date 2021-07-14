@@ -1,5 +1,6 @@
 package com.example.xedd.service;
 
+import com.example.xedd.exception.FileStorageException;
 import com.example.xedd.exception.NotFoundException;
 import com.example.xedd.exception.RecordNotFoundException;
 import com.example.xedd.model.Item;
@@ -10,10 +11,16 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -24,12 +31,11 @@ import java.util.Optional;
 public class ItemServiceImpl implements ItemService {
 
 
-    Path uploads = Paths.get("./uploads");
+    Path uploads = Paths.get(".\\uploads");
+    private Long id;
 
     private ItemRepository repository;
 
-//    Path uploads = Paths.get(".\\uploads");
-//    private Long id;
 
     @Autowired ItemServiceImpl(ItemRepository itemRepository) {
         this.repository = itemRepository;
@@ -44,6 +50,29 @@ public class ItemServiceImpl implements ItemService {
         Item newItem = repository.save(item);
         return newItem.getId();
     }
+    //Uit FilestorageserviceImpl
+    @Value("${app.upload.dir:${user.home}}")
+    private String uploadDirectory;  // relative to root
+    private final Path uploads = Paths.get(".\\uploads");
+
+    @Override
+    public void uploadFile(MultipartFile toPicture) {
+        try {
+            Path copyLocation = Paths.get(uploads + File.separator + StringUtils.cleanPath(toPicture.getOriginalFilename()));
+            Files.copy(toPicture.getInputStream(), copyLocation, StandardCopyOption.REPLACE_EXISTING);
+            Item item = new Item();
+            item.setDescription(toPicture.getName());
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new FileStorageException("Could not store file " + toPicture.getOriginalFilename() + ". Please try again.");
+        }
+    }
+
+//    @Override
+//    public void deleteFile(String filename) throws IOException {
+//        Path deleteLocation = Paths.get(uploads + File.separator + StringUtils.cleanPath(filename));
+//        Files.delete(deleteLocation);
+//    }
 
     public Collection<Item> getItems(String name) {
         if (name.isEmpty()) {
@@ -68,6 +97,7 @@ public class ItemServiceImpl implements ItemService {
         Item existingItem = repository.findById(id).get();
         existingItem.setName(item.getName());
         existingItem.setDescription(item.getDescription());
+        existingItem.setToPicture(item.getToPicture());
 
         repository.save(existingItem);
 
@@ -85,6 +115,8 @@ public class ItemServiceImpl implements ItemService {
                 case "description":
                     item.setDescription((String) fields.get(field));
                     break;
+                case "toPicture":
+                    item.setToPicture((String) fields.get(field));
 
             }
         }
@@ -95,8 +127,8 @@ public class ItemServiceImpl implements ItemService {
     public void deleteItem(long id) {
         if (!repository.existsById(id)) throw new RecordNotFoundException();
         repository.deleteById(id);
-
     }
+
     public Resource downloadFile(Long id) {
         Optional<Item> stored = repository.findById(id);
 
@@ -154,5 +186,7 @@ public class ItemServiceImpl implements ItemService {
 //        }
 //        return seeds;
 //    }
+
+
 }
 
