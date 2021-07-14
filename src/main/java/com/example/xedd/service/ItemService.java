@@ -25,7 +25,7 @@ public interface ItemService {
     //long uploadFile(ItemRequestDto itemDto);
 
     //uit FilestorageService
-//    void uploadFile(MultipartFile toPicture);
+    void uploadFile(MultipartFile toPicture);
 //    void deleteFile(String filename) throws IOException;
 
 

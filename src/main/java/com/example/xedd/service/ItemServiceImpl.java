@@ -31,8 +31,8 @@ import java.util.Optional;
 public class ItemServiceImpl implements ItemService {
 
 
-    Path uploads = Paths.get(".\\uploads");
-    private Long id;
+//    Path uploads = Paths.get(".\\uploads");
+//    private Long id;
 
     private ItemRepository repository;
 

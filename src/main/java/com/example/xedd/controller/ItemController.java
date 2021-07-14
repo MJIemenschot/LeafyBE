@@ -69,6 +69,20 @@ public class ItemController {
 //        itemService.createItem(item);
 //        return ResponseEntity.ok("Added");
 //    }
+
+    //uit voorbeeld
+//    @PostMapping(value = "/files",
+//           consumes = {MediaType.MULTIPART_FORM_DATA_VALUE},
+//            produces = {MediaType.APPLICATION_JSON_VALUE} )
+//    public ResponseEntity<Object> uploadFile(Method1RequestDto method1Dto) {
+//        long newId = methode1Service.uploadFile(method1Dto);
+//
+//        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+//                .buildAndExpand(newId).toUri();
+//
+//        return ResponseEntity.created(location).body(location);
+//    }
+//
     @GetMapping
     public ResponseEntity<Object> getItems() { return ResponseEntity.ok().body(itemService.getAllItems()); }
     public List<Item> fetchItems(@RequestParam(name="name", defaultValue="") String name,
@@ -101,18 +115,7 @@ public class ItemController {
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
                 .body(resource);
     }
-//    @PostMapping(value = "/files",
-////            consumes = {MediaType.MULTIPART_FORM_DATA_VALUE},
-//            produces = {MediaType.APPLICATION_JSON_VALUE} )
-//    public ResponseEntity<Object> uploadFile(Method1RequestDto method1Dto) {
-//        long newId = methode1Service.uploadFile(method1Dto);
-//
-//        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-//                .buildAndExpand(newId).toUri();
-//
-//        return ResponseEntity.created(location).body(location);
-//    }
-//
+
     @DeleteMapping("/items/{id}")
     public ResponseEntity<Object> deleteFile(@PathVariable long id) {
         itemService.deleteItem(id);

@@ -3,7 +3,7 @@ package com.example.xedd.dto;
 import lombok.Data;
 import com.example.xedd.model.Item;
 import org.springframework.web.multipart.MultipartFile;
-
+@Data
 public class ItemRequestDto {
     public long id;//?
     public String name;
