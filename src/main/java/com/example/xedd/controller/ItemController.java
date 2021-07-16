@@ -33,12 +33,11 @@ public class ItemController {
 
     private List<Item> items = new ArrayList<>();
 
- //constructor
 
-//    public ItemController(ItemService itemService) {
-//        super();
-//        this.itemService = itemService;
-//    }
+    @PostMapping("addUserAndGetItemById/{username}/{id}")
+    public Item addItemToUser(@PathVariable("username") String username, @PathVariable("id") Long id){
+        return itemService.addItemToUser(id, username);
+    }
 
 
     //build create item rest api
@@ -54,7 +53,7 @@ public class ItemController {
             item.setName(name);
             item.setDescription(description);
             item.setSeed(isSeed);
-
+            //item.setUploadedByUsername(uploadedByUsername);
             item.setToPicture(toPicture.getOriginalFilename());
 
             itemService.createItem(item);
@@ -70,7 +69,7 @@ public class ItemController {
 //        return ResponseEntity.ok("Added");
 //    }
 
-    //uit voorbeeld
+    //uit voorbeeld met DTO
 //    @PostMapping(value = "/files",
 //           consumes = {MediaType.MULTIPART_FORM_DATA_VALUE},
 //            produces = {MediaType.APPLICATION_JSON_VALUE} )
@@ -86,8 +85,21 @@ public class ItemController {
     @GetMapping
     public ResponseEntity<Object> getItems() { return ResponseEntity.ok().body(itemService.getAllItems()); }
     public List<Item> fetchItems(@RequestParam(name="name", defaultValue="") String name,
-                                 @RequestParam(name="description", defaultValue="") String description) {
+                                 @RequestParam(name="description", defaultValue="") String description,
+                                @RequestParam(name="toPicture", defaultValue = "") String toPicture)
+    {
         return (List<Item>) ResponseEntity.ok().body(itemService.getAllItems());
+    }
+
+    @GetMapping("{id}/toPicture")
+    public ResponseEntity downloadFile(@PathVariable("id") Long id) {
+        Resource resource = itemService.downloadFile(id);
+        String fileName = itemService.getItem(id).getToPicture();
+        String mediaType = "application/octet-stream";
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(mediaType))
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename = \"" + fileName + "\"")
+                .body(resource);
     }
 
     @GetMapping(value = "/{id}")
@@ -105,16 +117,7 @@ public class ItemController {
         itemService.partialUpdateItem(id, fields);
         return ResponseEntity.noContent().build();
     }
-    @GetMapping("{id}/toPicture")
-    public ResponseEntity downloadFile(@PathVariable long id) {
-        Resource resource = itemService.downloadFile(id);
-        //String filename = itemService.getItemById(id).getToPicture();
-        String mediaType = "application/octet-stream";
-        return ResponseEntity.ok()
-                .contentType(MediaType.parseMediaType(mediaType))
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
-                .body(resource);
-    }
+
 
     @DeleteMapping("/items/{id}")
     public ResponseEntity<Object> deleteFile(@PathVariable long id) {

@@ -5,6 +5,7 @@ import com.example.xedd.dto.MessageResponseDto;
 import com.example.xedd.exception.FileStorageException;
 import com.example.xedd.exception.NotFoundException;
 import com.example.xedd.exception.RecordNotFoundException;
+import com.example.xedd.model.Item;
 import com.example.xedd.model.Message;
 import com.example.xedd.repository.MessageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -94,6 +95,17 @@ public class MessageServiceImpl implements MessageService {
         else {
             throw new RecordNotFoundException();
         }
+    }
+    @Override
+    public void updateMessage(long id, Message message) {
+        if (!repository.existsById(id)) throw new RecordNotFoundException();
+        Message existingMessage = repository.findById(id).get();
+        existingMessage.setTitle(message.getTitle());
+        existingMessage.setDescription(message.getDescription());
+        existingMessage.setLocation(message.getLocation());
+
+        repository.save(existingMessage);
+
     }
 
     @Override

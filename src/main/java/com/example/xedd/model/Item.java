@@ -24,7 +24,7 @@ public class Item {
     private boolean isPlant;
 
 //    @Column(name = "uploaded_by_username")
-//    private String uploadedByUsername;  of:
+    private String uploadedByUsername;
     //    @ManyToOne
 //    User user;
 //    private Date uploadedTimestamp;
@@ -38,7 +38,7 @@ public class Item {
     //constructor
 
 
-    public Item(long id, String name, String description, String toPicture, boolean isSeed, boolean isEnt, boolean isPlant) {
+    public Item(long id, String name, String description, String toPicture, boolean isSeed, boolean isEnt, boolean isPlant, String uploadedByUsername) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -46,6 +46,7 @@ public class Item {
         this.isSeed = isSeed;
         this.isEnt = isEnt;
         this.isPlant = isPlant;
+        this.uploadedByUsername = uploadedByUsername;
 
     }
     //getters and setters
@@ -90,4 +91,12 @@ public class Item {
     public boolean isPlant() { return isPlant; }
 
     public void setPlant(boolean plant) { isPlant = plant; }
+
+    public String getUploadedByUsername() {
+        return uploadedByUsername;
+    }
+
+    public void setUploadedByUsername(String uploadedByUsername) {
+        this.uploadedByUsername = uploadedByUsername;
+    }
 }

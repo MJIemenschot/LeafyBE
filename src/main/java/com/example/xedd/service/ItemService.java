@@ -12,21 +12,24 @@ import java.util.Map;
 import java.util.Optional;
 
 public interface ItemService {
+
+    Item addItemToUser(Long id, String username);
     List<Item> getAllItems();
-    long createItem(Item item);
     Collection<Item> getItems(String name);
-    //Item getItem(Long id);
-
+    Item getItem(Long id);
     Optional<Item> getItemById(long id);
-    void updateItem(long id, Item item);
-    void partialUpdateItem(long id, Map<String, String> fields);
     void deleteItem(long id);
+    long createItem(Item item);
+    void updateItem(long id, Item item);
     Resource downloadFile(Long id);
+    void partialUpdateItem(long id, Map<String, String> fields);
     //long uploadFile(ItemRequestDto itemDto);
-
     //uit FilestorageService
     void uploadFile(MultipartFile toPicture);
-//    void deleteFile(String filename) throws IOException;
+    void deleteFile(String filename) throws IOException;
+    List<Object> getAllSeeds();
+    //List<Object> getAllEnts();
+    //List<Object> getPlants();
 
 
     public boolean itemExistsById(long id);

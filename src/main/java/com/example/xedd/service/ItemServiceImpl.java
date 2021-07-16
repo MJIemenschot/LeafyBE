@@ -34,26 +34,47 @@ public class ItemServiceImpl implements ItemService {
 //    Path uploads = Paths.get(".\\uploads");
 //    private Long id;
 
+
     private ItemRepository repository;
+
+    @Override
+    public Item addItemToUser(Long id, String username) {
+        if (!repository.existsById(id))throw new NotFoundException();
+
+        Item item = repository.getById(id);
+        Item newItem = new Item();
+
+        newItem.setUploadedByUsername(username);
+        newItem.setSeed(false);
+        newItem.setEnt(false);
+        newItem.setPlant(false);
+        newItem.setName(item.getName());
+        newItem.setDescription(item.getDescription());
+        newItem.setToPicture(item.getToPicture());
+
+        return repository.save(newItem);
+
+    }
+    @Override
+    public List<Item> getAllItems() {
+        return repository.findAll();
+    }
 
 
     @Autowired ItemServiceImpl(ItemRepository itemRepository) {
         this.repository = itemRepository;
     }
 
-    @Override
-    public List<Item> getAllItems() {
-        return repository.findAll();
-    }
+
     @Override
     public long createItem(Item item) {
         Item newItem = repository.save(item);
         return newItem.getId();
     }
     //Uit FilestorageserviceImpl
-    @Value("${app.upload.dir:${user.home}}")
+    @Value("${app.upload.dir:...}")
     private String uploadDirectory;  // relative to root
-    private final Path uploads = Paths.get(".\\uploads");
+    Path uploads = Paths.get(".\\uploads");
 
     @Override
     public void uploadFile(MultipartFile toPicture) {
@@ -66,6 +87,12 @@ public class ItemServiceImpl implements ItemService {
             e.printStackTrace();
             throw new FileStorageException("Could not store file " + toPicture.getOriginalFilename() + ". Please try again.");
         }
+    }
+
+    @Override
+    public void deleteFile(String filename) throws IOException {
+        Path deleteLocation = Paths.get(uploads + File.separator + StringUtils.cleanPath(filename));
+        Files.delete(deleteLocation);
     }
 
 //    @Override
@@ -82,10 +109,10 @@ public class ItemServiceImpl implements ItemService {
             return repository.findAllByName(name);
         }
     }
-//    @Override
-//    public Item getItem(Long id) {
-//        return repository.getItemById(id);
-//    }
+    @Override
+    public Item getItem(Long id) {
+        return repository.getById(id);
+    }
     @Override
     public Optional<Item> getItemById(long id) {
        if (!repository.existsById(id)) throw new RecordNotFoundException();
@@ -177,15 +204,15 @@ public class ItemServiceImpl implements ItemService {
         return  repository.existsById(id);
     }
 
-//    @Override
-//    public List<Object> getAllSeeds() {
-//        List<Item> itemList = repository.findAllSeeds();
-//        List<Object> seeds = new ArrayList<>();
-//        for (int i = 0; i < itemList.size(); i++) {
-//            if (itemList.get(i).isSeed()) seeds.add(itemList.get(i));
-//        }
-//        return seeds;
-//    }
+    @Override
+    public List<Object> getAllSeeds() {
+        List<Item> itemList = repository.findAll();
+        List<Object> seeds = new ArrayList<>();
+        for (int i = 0; i < itemList.size(); i++) {
+            if (itemList.get(i).isSeed()) seeds.add(itemList.get(i));
+        }
+        return seeds;
+    }
 
 
 }

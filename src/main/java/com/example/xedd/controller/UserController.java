@@ -13,6 +13,7 @@ import java.util.Map;
 
 @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
 @RestController
+@CrossOrigin("*")
 @RequestMapping(value = "api/v1/users")
 public class UserController {
 

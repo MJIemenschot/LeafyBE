@@ -82,7 +82,7 @@ public class MessageController {
 //    public ResponseEntity<Object> getMessage(@PathVariable("id") Long id) {
 //        return ResponseEntity.ok().body(messageService.getMessageById(id));
 //    }
-//    /////klopy het volgende wel?
+//    /////klopt het volgende wel?
 //
 //    @PostMapping(value = "")
 //    public ResponseEntity<Object> createMessage(@RequestBody Message message) {
@@ -94,11 +94,11 @@ public class MessageController {
 //        return ResponseEntity.created(location).build();
 //    }
 //
-//    @PutMapping(value = "/{id}")
-//    public ResponseEntity<Object> updateMessage(@PathVariable("id") long id, @RequestBody Message message) {
-//        messageService.updateMessage(id, message);
-//        return ResponseEntity.noContent().build();
-//    }
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<Object> updateMessage(@PathVariable("id") long id, @RequestBody Message message) {
+        messageService.updateMessage(id, message);
+        return ResponseEntity.noContent().build();
+    }
 //
 ////    @DeleteMapping(value = "/{username}")
 ////    public ResponseEntity<Object> deleteMessage(@PathVariable("id") ) {

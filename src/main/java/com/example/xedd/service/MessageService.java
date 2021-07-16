@@ -18,7 +18,7 @@ public interface MessageService {
     void deleteFile(long id);
     Resource downloadFile(long id);
 //    long createMessage(Message message);
-//    void updateMessage(long id, Message message);
+    void updateMessage(long id, Message message);
 //    void partialUpdateMessage(long id, Map<String, String> fields);
 //    void deleteMessage(long id);
 //    Collection<Message> getMessages(String title, String content);
