@@ -5,7 +5,7 @@ import com.example.xedd.dto.MessageResponseDto;
 import com.example.xedd.exception.FileStorageException;
 import com.example.xedd.exception.NotFoundException;
 import com.example.xedd.exception.RecordNotFoundException;
-import com.example.xedd.model.Item;
+//import com.example.xedd.model.Item;
 import com.example.xedd.model.Message;
 import com.example.xedd.repository.MessageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +34,7 @@ public class MessageServiceImpl implements MessageService {
     @Value("${app.upload.dir:${user.home}}")
     private String uploadDirectory;  // relative to root
     private final Path uploads = Paths.get(".\\uploads");
+    //public static String uploadDirectory = System.getProperty("user.dir") + "/uploads";
 
     @Autowired
     private MessageRepository repository;
@@ -51,30 +52,57 @@ public class MessageServiceImpl implements MessageService {
     public Iterable<Message> getFiles() {
         return repository.findAll();
     }
+//eerste oplossing
+//    public long uploadFile(MessageRequestDto messageDto) {
+//
+//        MultipartFile file = messageDto.getFile();
+//
+//        String originalFilename = StringUtils.cleanPath(file.getOriginalFilename());
+//        Path copyLocation = this.uploads.resolve(file.getOriginalFilename());
+//
+//        try {
+//            Files.copy(file.getInputStream(), copyLocation, StandardCopyOption.REPLACE_EXISTING);
+//        } catch (Exception e) {
+//            throw new FileStorageException("Could not store file " + originalFilename + ". Please try again!");
+//        }
+//
+//        Message newFileToStore = new Message();
+//        newFileToStore.setFileName(originalFilename);
+//        newFileToStore.setLocation(copyLocation.toString());
+//        newFileToStore.setTitle(messageDto.getTitle());
+//        newFileToStore.setDescription(messageDto.getDescription());
+//
+//        Message saved = repository.save(newFileToStore);
+//
+//        return saved.getId();
+//    }
+    //Opnieuw
+public long uploadFile(MessageRequestDto messageRequestDto) {
 
-    public long uploadFile(MessageRequestDto messageDto) {
-
-        MultipartFile file = messageDto.getFile();
-
-        String originalFilename = StringUtils.cleanPath(file.getOriginalFilename());
-        Path copyLocation = this.uploads.resolve(file.getOriginalFilename());
-
+    MultipartFile file =messageRequestDto.getFile();
+    String originalFilename = "";
+    Path copyLocation = null;
+    if (file != null) {
+        originalFilename = StringUtils.cleanPath(file.getOriginalFilename());
+        copyLocation = this.uploads.resolve(file.getOriginalFilename());
         try {
             Files.copy(file.getInputStream(), copyLocation, StandardCopyOption.REPLACE_EXISTING);
         } catch (Exception e) {
             throw new FileStorageException("Could not store file " + originalFilename + ". Please try again!");
         }
-
-        Message newFileToStore = new Message();
-        newFileToStore.setFileName(originalFilename);
-        newFileToStore.setLocation(copyLocation.toString());
-        newFileToStore.setTitle(messageDto.getTitle());
-        newFileToStore.setDescription(messageDto.getDescription());
-
-        Message saved = repository.save(newFileToStore);
-
-        return saved.getId();
     }
+
+    Message newFileToStore = new Message();
+    newFileToStore.setFileName(originalFilename);
+    //newFileToStore.setUploadedByUsername(messageRequestDto.getUploadedByUsername());
+    if (copyLocation != null ) { newFileToStore.setLocation(copyLocation.toString()); }
+    newFileToStore.setTitle(messageRequestDto.getTitle());
+    newFileToStore.setDescription(messageRequestDto.getDescription());
+
+    Message saved = repository.save(newFileToStore);
+
+    return saved.getId();
+}
 
     @Override
     public void deleteFile(long id) {
@@ -140,11 +168,12 @@ public class MessageServiceImpl implements MessageService {
 
         if (stored.isPresent()) {
             String filename = stored.get().getFileName();
+            //String location = stored.get().getLocation();
             Path path = this.uploads.resolve(filename);
 
             Resource resource = null;
             try {
-                resource = new UrlResource(path .toUri());
+                resource = new UrlResource(path.toUri());
                 return resource;
             } catch (MalformedURLException e) {
                 e.printStackTrace();

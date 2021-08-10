@@ -3,6 +3,7 @@ package com.example.xedd.model;
 
 import javax.persistence.*;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -27,6 +28,9 @@ public class User {
 
     @Column
     private String photo;
+
+////    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+////      private Set <Item> items = new HashSet<>();
 
     @OneToMany(
             targetEntity = com.example.xedd.model.Authority.class,

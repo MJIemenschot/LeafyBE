@@ -1,6 +1,7 @@
 package com.example.xedd.controller;
 
 
+import com.example.xedd.dto.FileUploadResponse;
 import com.example.xedd.dto.MessageRequestDto;
 import com.example.xedd.dto.MessageResponseDto;
 import com.example.xedd.model.Message;
@@ -20,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@CrossOrigin("*")
+@CrossOrigin(value = {"*"}, exposedHeaders = {"Content-Disposition"})
 @RequestMapping(value = "api/v1/messages")
 public class MessageController {
 
@@ -34,31 +35,48 @@ public class MessageController {
     }
 
     @GetMapping("/files/{id}")
-    public ResponseEntity<Object> getFileInfo(@PathVariable long id) {
+    public ResponseEntity<Object> getMessageInfo(@PathVariable long id) {
         MessageResponseDto response = messageService.getFileById(id);
         return ResponseEntity.ok().body(response);
     }
 
-    @GetMapping("/files/{id}/download")
-    public ResponseEntity downloadFile(@PathVariable long id) {
+    @GetMapping("files/{id}/fileName")
+    public ResponseEntity downloadFile(@PathVariable("id") Long id) {
         Resource resource = messageService.downloadFile(id);
-        String mediaType = "application/octet-stream";
+        //String location = messageService.getFileById(id),getLocation();
+        //String fileName = messageService.getFileById(id).getFileName();
+        String fileName = "application/octet-stream";
         return ResponseEntity.ok()
-                .contentType(MediaType.parseMediaType(mediaType))
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
+                .contentType(MediaType.parseMediaType(fileName))
+//                //download
+//                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
+                //display
+                .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + resource.getFilename() + "\"")
                 .body(resource);
     }
 
     @PostMapping(value = "/files",
-            consumes = {MediaType.MULTIPART_FORM_DATA_VALUE},
+//            consumes = {MediaType.MULTIPART_FORM_DATA_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE} )
-    public ResponseEntity<Object> uploadFile(MessageRequestDto messageDto) {
+    public ResponseEntity<Object> uploadMessage(MessageRequestDto messageDto) {
         long newId = messageService.uploadFile(messageDto);
-
+    // uit voorbeeld Peter
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
                 .buildAndExpand(newId).toUri();
 
         return ResponseEntity.created(location).body(location);
+//   green learner
+// /http://localhost:8089/download/abc.jpg
+//        String url = ServletUriComponentsBuilder.fromCurrentContextPath()
+//                .path("/download/")
+//                .path(fileName)
+//                .toUriString();
+//
+//        String contentType = file.getContentType();
+//
+//        FileUploadResponse response = new FileUploadResponse(fileName, contentType, url);
+//
+//        return response;
     }
 
     @DeleteMapping("/files/{id}")
@@ -66,6 +84,12 @@ public class MessageController {
         messageService.deleteFile(id);
         return ResponseEntity.noContent().build();
     }
+    //
+////    @DeleteMapping(value = "/{username}")
+////    public ResponseEntity<Object> deleteMessage(@PathVariable("id") ) {
+////        messageService.deleteMessage(long id);
+////        return ResponseEntity.noContent().build();
+////    }
 
 //
 //    //private List<Message> messages = new ArrayList<>();
@@ -99,10 +123,5 @@ public class MessageController {
         messageService.updateMessage(id, message);
         return ResponseEntity.noContent().build();
     }
-//
-////    @DeleteMapping(value = "/{username}")
-////    public ResponseEntity<Object> deleteMessage(@PathVariable("id") ) {
-////        messageService.deleteMessage(long id);
-////        return ResponseEntity.noContent().build();
-////    }
+
 }

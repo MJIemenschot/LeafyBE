@@ -15,7 +15,7 @@ public class Message {
     @Column
     private String fileName;
     private String title;
-    private String  description;
+    private String description;
     private String mediaType;
     private String location;
     private Date uploadedTimestamp;

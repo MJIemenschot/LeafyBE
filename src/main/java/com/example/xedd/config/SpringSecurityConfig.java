@@ -62,8 +62,8 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/authenticated").authenticated()
                 .antMatchers("/authenticate").permitAll()
                 .anyRequest().permitAll()
-//                .and()
-//                .cors()
+                .and()
+                .cors()
                 .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
@@ -104,7 +104,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 //
 //        };
 //    }
-
+//
 }
 
 //@Configuration
