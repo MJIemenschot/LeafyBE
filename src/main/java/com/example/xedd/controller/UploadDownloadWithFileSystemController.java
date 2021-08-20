@@ -31,13 +31,12 @@ public class UploadDownloadWithFileSystemController {
     }
 
     @PostMapping("/upload")
-    FileUploadResponse singleFileUpload(@RequestParam("file") MultipartFile file,
-                                        @RequestParam String title)
+    FileUploadResponse singleFileUpload(@RequestParam("file") MultipartFile file)
     {
 
         String fileName = fileStorageService.storeFile(file);
 
-        ///http://localhost:8089/download/abc.jpg
+        ///http://localhost:8080/download/abc.jpg
         String url = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path("/download/")
                 .path(fileName)
@@ -86,7 +85,7 @@ public class UploadDownloadWithFileSystemController {
                 .forEach(file -> {
                     String fileName = fileStorageService.storeFile(file);
 
-                    ///http://localhost:8081/download/abc.jpg
+                    ///http://localhost:8080/download/abc.jpg
                     String url = ServletUriComponentsBuilder.fromCurrentContextPath()
                             .path("/download/")
                             .path(fileName)
@@ -121,7 +120,7 @@ public class UploadDownloadWithFileSystemController {
 
                             zos.closeEntry();
                         } catch (IOException e) {
-                            System.out.println("some exception while ziping");
+                            System.out.println("some exception while zipping");
                         }
                     });
             zos.finish();

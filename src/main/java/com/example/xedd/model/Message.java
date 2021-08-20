@@ -18,21 +18,28 @@ public class Message {
     private String description;
     private String mediaType;
     private String location;
-    private Date uploadedTimestamp;
-    private String uploadedByUsername;
 
+    @Enumerated(value = EnumType.STRING)
+    private Difficulty difficulty;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "uploaded_timestmp")
+    private Date uploadedTimestamp;
+
+    private String uploadedByUsername;
 
 
     public Message() {
     }
-    public Message(long id, String title, String description, String mediaType, String location, Date uploadedTimestamp, String uploadedByUsername) {
+
+    public Message(long id, String fileName, String title, String description, String mediaType, String location, Difficulty difficulty, Date uploadedTimestamp, String uploadedByUsername) {
         this.id = id;
         this.fileName = fileName;
-
         this.title = title;
         this.description = description;
         this.mediaType = mediaType;
         this.location = location;
+        this.difficulty = difficulty;
         this.uploadedTimestamp = uploadedTimestamp;
         this.uploadedByUsername = uploadedByUsername;
     }
@@ -76,5 +83,13 @@ public class Message {
 
     public void setUploadedByUsername(String uploadedByUsername) {
         this.uploadedByUsername = uploadedByUsername;
+    }
+
+    public Difficulty getDifficulty() {
+        return difficulty;
+    }
+
+    public void setDifficulty(Difficulty difficulty) {
+        this.difficulty = difficulty;
     }
 }

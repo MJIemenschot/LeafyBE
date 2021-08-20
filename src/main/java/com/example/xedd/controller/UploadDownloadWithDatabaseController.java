@@ -16,6 +16,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
 @RestController
+@CrossOrigin(value = {"*"})
+@RequestMapping()
 public class UploadDownloadWithDatabaseController {
 
 
@@ -25,7 +27,7 @@ public class UploadDownloadWithDatabaseController {
     public UploadDownloadWithDatabaseController(DocFileDao docFileDao){
         this.docFileDao = docFileDao;
     }
-    @PostMapping("single/uploadDB")
+    @PostMapping("uploadDB")
     FileUploadResponse singleFileUpload(@RequestParam("file") MultipartFile file) throws IOException {
 
         String name = StringUtils.cleanPath(file.getOriginalFilename());
@@ -35,7 +37,7 @@ public class UploadDownloadWithDatabaseController {
 
         docFileDao.save(fileDocument);
 
-        ///http://localhost:8089/download/abc.jpg
+        ///http://localhost:8080/download/abc.jpg
         String url = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path("/downloadFromDB/")
                 .path(name)

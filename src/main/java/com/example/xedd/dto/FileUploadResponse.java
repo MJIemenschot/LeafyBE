@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class FileUploadResponse {
 
-    private String title;
+    //private String title;
 
     private String fileName;
 
@@ -14,23 +14,23 @@ public class FileUploadResponse {
     private String url;
 
     public FileUploadResponse(
-//            String title,
+            //String title,
                               String fileName,
                               String contentType,
                               String url) {
         this.fileName = fileName;
-        this.title = title;
+        //this.title = title;
         this.contentType = contentType;
         this.url = url;
     }
 
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
+//    public String getTitle() {
+//        return title;
+//    }
+//
+//    public void setTitle(String title) {
+//        this.title = title;
+//    }
 
     public String getFileName() {
         return fileName;

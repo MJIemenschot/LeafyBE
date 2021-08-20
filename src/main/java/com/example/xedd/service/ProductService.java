@@ -9,4 +9,7 @@ public interface ProductService {
     void saveProduct(Product product);
     List<Product> getProducts();
     Optional<Product> getProductById(Long id);
+   // void partialUpdateProduct(long id, Map<String, String> fields);
+    void updateProduct(long id, Product product);
+    void deleteProduct(long id);
 }

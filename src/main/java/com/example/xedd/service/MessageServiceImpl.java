@@ -33,7 +33,7 @@ public class MessageServiceImpl implements MessageService {
 
     @Value("${app.upload.dir:${user.home}}")
     private String uploadDirectory;  // relative to root
-    private final Path uploads = Paths.get(".\\uploads");
+    private final Path uploads = Paths.get(".\\public");
     //public static String uploadDirectory = System.getProperty("user.dir") + "/uploads";
 
     @Autowired
@@ -77,7 +77,7 @@ public class MessageServiceImpl implements MessageService {
 //        return saved.getId();
 //    }
     //Opnieuw
-public long uploadFile(MessageRequestDto messageRequestDto) {
+public long uploadMessage(MessageRequestDto messageRequestDto) {
 
     MultipartFile file =messageRequestDto.getFile();
     String originalFilename = "";
@@ -91,21 +91,19 @@ public long uploadFile(MessageRequestDto messageRequestDto) {
             throw new FileStorageException("Could not store file " + originalFilename + ". Please try again!");
         }
     }
-
     Message newFileToStore = new Message();
     newFileToStore.setFileName(originalFilename);
     //newFileToStore.setUploadedByUsername(messageRequestDto.getUploadedByUsername());
     if (copyLocation != null ) { newFileToStore.setLocation(copyLocation.toString()); }
     newFileToStore.setTitle(messageRequestDto.getTitle());
     newFileToStore.setDescription(messageRequestDto.getDescription());
-
     Message saved = repository.save(newFileToStore);
 
     return saved.getId();
 }
 
     @Override
-    public void deleteFile(long id) {
+    public void deleteMessage(long id) {
         Optional<Message> stored = repository.findById(id);
 
         if (stored.isPresent()) {

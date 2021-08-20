@@ -14,8 +14,8 @@ public interface MessageService {
     Iterable<Message> getFiles();
     MessageResponseDto getFileById(long id);
     boolean fileExistsById(long id);
-    long uploadFile(MessageRequestDto messageDto);
-    void deleteFile(long id);
+    long uploadMessage(MessageRequestDto messageDto);
+    void deleteMessage(long id);
     Resource downloadFile(long id);
 //    long createMessage(Message message);
     void updateMessage(long id, Message message);

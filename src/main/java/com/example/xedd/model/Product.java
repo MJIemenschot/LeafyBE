@@ -2,15 +2,7 @@ package com.example.xedd.model;
 
 import java.util.Arrays;
 import java.util.Date;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Lob;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.*;
 
 
 @Entity
@@ -31,9 +23,12 @@ public class Product {
     @Column(name = "description", nullable = false)
     private String description;
 
-    //@Size(min = 2, max = 10)
-    @Column(name = "price",nullable = false, precision = 10, scale = 2)
-    private double price;
+    private String byUser;
+
+    private boolean favourite;
+
+    @Enumerated(value = EnumType.STRING)
+    private Difficulty difficulty;
 
     @Lob
     @Column(name = "Image", length = Integer.MAX_VALUE, nullable = true)
@@ -63,12 +58,15 @@ public class Product {
     public void setDescription(String description) {
         this.description = description;
     }
-    public double getPrice() {
-        return price;
+
+    public Difficulty getDifficulty() {
+        return difficulty;
     }
-    public void setPrice(double price) {
-        this.price = price;
+
+    public void setDifficulty(Difficulty difficulty) {
+        this.difficulty = difficulty;
     }
+
     public byte[] getImage() {
         return image;
     }
@@ -84,8 +82,15 @@ public class Product {
 
     @Override
     public String toString() {
-        return "Product [id=" + id + ", name=" + name + ", description=" + description + ", price=" + price + ", image="
-                + Arrays.toString(image) + ", createDate=" + createDate + "]";
+        return "Product{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", byUser='" + byUser + '\'' +
+                ", favourite=" + favourite +
+                ", difficulty=" + difficulty +
+                ", image=" + Arrays.toString(image) +
+                ", createDate=" + createDate +
+                '}';
     }
-
 }

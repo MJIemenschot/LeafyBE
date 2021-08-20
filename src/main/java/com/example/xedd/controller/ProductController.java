@@ -16,13 +16,17 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 
+import com.example.xedd.exception.NotFoundException;
+import com.example.xedd.model.Item;
 import com.example.xedd.model.Product;
 import com.example.xedd.service.ProductService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -42,7 +46,7 @@ public class ProductController {
 //@Value("${uploads}")
     private String uploads;  // relative to root
     ///or
-//    private String uploadDirectory;  // relative to root
+    //private String uploadDirectory;  // relative to root
     private final Path upload = Paths.get(".\\uploads");
 
     @Autowired
@@ -50,14 +54,12 @@ public class ProductController {
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-//    @GetMapping(value = {"/", "/home"})
-//    public String addProductPage() {
-//        return "index";
-//    }
 
-    @PostMapping("/product/saveProduct")
+    @PostMapping(value="/product/save")
     public @ResponseBody ResponseEntity<?> saveProduct(@RequestParam("name") String name,
-                                                       @RequestParam("price") double price, @RequestParam("description") String description, Model model, HttpServletRequest request
+                                                       //@RequestParam("difficulty") enum difficulty,
+                                                       @RequestParam("description") String description,
+                                                       Model model, HttpServletRequest request
             ,final @RequestParam("image") MultipartFile file) {
         try {
             //String uploadDirectory = System.getProperty("user.dir") + uploadFolder;
@@ -75,7 +77,7 @@ public class ProductController {
             Date createDate = new Date();
             log.info("Name: " + names[0]+" "+filePath);
             log.info("description: " + descriptions[0]);
-            log.info("price: " + price);
+            //log.info("price: " + price);
             try {
                 File dir = new File(uploadDirectory);
                 if (!dir.exists()) {
@@ -94,7 +96,7 @@ public class ProductController {
             Product product = new Product();
             product.setName(names[0]);
             product.setImage(imageData);
-            product.setPrice(price);
+            //product.setDifficulty(difficulty);
             product.setDescription(descriptions[0]);
             product.setCreateDate(createDate);
             productService.saveProduct(product);
@@ -107,55 +109,35 @@ public class ProductController {
         }
     }
 
-    @GetMapping("/product/display/{id}")
+    @GetMapping(value = "/product/display/{id}")
     @ResponseBody
     void showImage(@PathVariable("id") Long id, HttpServletResponse response, Optional<Product> product)
-            throws ServletException, IOException {
+            throws NotFoundException, IOException {
         log.info("Id :: " + id);
         product = productService.getProductById(id);
-        //response.setContentType("image/jpeg, image/jpg, image/png, image/gif");
+    //response.setContentType("image/jpeg, image/jpg, image/png, image/gif");
         response.getOutputStream().write(product.get().getImage());
         response.getOutputStream().close();
     }
 
-    @GetMapping("/product/productdetails")
-    String showProductDetails(@RequestParam("id") Long id, Optional<Product> product, Model model) {
-        try {
-            log.info("Id :: " + id);
-            if (id != 0) {
-                product = productService.getProductById(id);
-
-                log.info("products :: " + product);
-                if (product.isPresent()) {
-                    model.addAttribute("id", product.get().getId());
-                    model.addAttribute("description", product.get().getDescription());
-                    model.addAttribute("name", product.get().getName());
-                    model.addAttribute("price", product.get().getPrice());
-                    return "productdetails";
-                }
-                return "redirect:/home";
-            }
-            return "redirect:/home";
-        } catch (Exception e) {
-            e.printStackTrace();
-            return "redirect:/home";
-        }
-    }
-
-    @GetMapping("/product/show")
-    String show(Model map) {
-        List<Product> products = productService.getProducts();
-        map.addAttribute("products", products);
-        return "products";
-    }
-    @GetMapping("products")
+    @GetMapping(value="products")
     public ResponseEntity<Object> getProducts()  { return ResponseEntity.ok().body(productService.getProducts()); }
-    public List<Product> fetchItems(@RequestParam(name="name", defaultValue="") String name,
-                                    @RequestParam(name="description", defaultValue="") String description,
-                                    @RequestParam(name="file", defaultValue = "") String file)
-    {
-        return (List<Product>) ResponseEntity.ok().body(productService.getProducts());
+
+    @GetMapping(value = "/product/{id}")
+    public ResponseEntity<Object> getProductById(@PathVariable("id") long id) {
+        return ResponseEntity.ok().body(productService.getProductById(id));
     }
 
+    @PutMapping(value = "/product/update/{id}")
+    public ResponseEntity<Object> updateProduct(@PathVariable("id") long id, @RequestBody Product product) {
+        productService.updateProduct(id, product);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/products/{id}")
+    public ResponseEntity<Object> deleteProduct(@PathVariable long id) {
+        productService.deleteProduct(id);
+        return ResponseEntity.noContent().build();
+    }
 
 }

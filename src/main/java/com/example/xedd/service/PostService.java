@@ -4,6 +4,7 @@ import com.example.xedd.dto.MessageRequestDto;
 import com.example.xedd.dto.PostRequestDto;
 import com.example.xedd.dto.PostResponseDto;
 import com.example.xedd.model.Post;
+import com.example.xedd.model.Product;
 import com.example.xedd.repository.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -15,11 +16,15 @@ import java.util.Optional;
 //
 public interface PostService {
 
-    // void savePost(MultipartFile file, String name, String description);
-
-        void savePost(Post post);
-        List<Post> getPosts();
-        Optional<Post> getPostById(Long id);
+     //void createPost(PostRequestDto postRequestDto);
+     void uploadFile(MultipartFile image);
+     //void addPost(MultipartFile image, String name, String description);
+     void savePost(Post post);
+     List<Post> getPosts();
+     Optional<Post> getPostById(Long id);
+     // void partialUpdatePost(long id, Map<String, String> fields);
+     void updatePost(long id, Post post);
+     void deletePost(long id);
 
 
 

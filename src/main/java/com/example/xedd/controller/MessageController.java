@@ -56,32 +56,21 @@ public class MessageController {
     }
 
     @PostMapping(value = "/files",
-//            consumes = {MediaType.MULTIPART_FORM_DATA_VALUE},
+            consumes = {MediaType.MULTIPART_FORM_DATA_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE} )
     public ResponseEntity<Object> uploadMessage(MessageRequestDto messageDto) {
-        long newId = messageService.uploadFile(messageDto);
+        long newId = messageService.uploadMessage(messageDto);
     // uit voorbeeld Peter
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
                 .buildAndExpand(newId).toUri();
 
         return ResponseEntity.created(location).body(location);
-//   green learner
-// /http://localhost:8089/download/abc.jpg
-//        String url = ServletUriComponentsBuilder.fromCurrentContextPath()
-//                .path("/download/")
-//                .path(fileName)
-//                .toUriString();
-//
-//        String contentType = file.getContentType();
-//
-//        FileUploadResponse response = new FileUploadResponse(fileName, contentType, url);
-//
-//        return response;
+
     }
 
     @DeleteMapping("/files/{id}")
-    public ResponseEntity<Object> deleteFile(@PathVariable long id) {
-        messageService.deleteFile(id);
+    public ResponseEntity<Object> deleteMessage(@PathVariable long id) {
+        messageService.deleteMessage(id);
         return ResponseEntity.noContent().build();
     }
     //

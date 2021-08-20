@@ -4,13 +4,14 @@ import javax.persistence.*;
 
 
 @Entity
+@Table(name = "file_document")
 public class FileDocument {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    private String title;
+   // private String title;
 
     @Column(name = "file_name")
     private String fileName;
@@ -27,9 +28,9 @@ public class FileDocument {
         this.id = id;
     }
 
-    public String getTitle() { return title; }
-
-    public void setTitle(String title) { this.title = title; }
+//    public String getTitle() { return title; }
+//
+//    public void setTitle(String title) { this.title = title; }
 
     public String getFileName() {
         return fileName;
