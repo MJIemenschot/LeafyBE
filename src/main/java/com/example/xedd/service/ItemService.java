@@ -24,7 +24,7 @@ public interface ItemService {
     List<Item> getAllItems();
     Collection<Item> getItems(String name);
     Item getItem(Long id);
-    Optional<Item> getItemById(long id);
+    ItemResponseDto getItemById(long id);
     void deleteItem(long id);
 
     //long createItem(Item item);

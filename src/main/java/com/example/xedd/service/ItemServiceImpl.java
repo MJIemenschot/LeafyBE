@@ -3,6 +3,7 @@ package com.example.xedd.service;
 import com.example.xedd.dto.ItemRequestDto;
 import com.example.xedd.dto.ItemResponseDto;
 import com.example.xedd.dto.MessageRequestDto;
+import com.example.xedd.dto.MessageResponseDto;
 import com.example.xedd.exception.FileStorageException;
 import com.example.xedd.exception.NotFoundException;
 import com.example.xedd.exception.RecordNotFoundException;
@@ -16,10 +17,12 @@ import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -168,11 +171,28 @@ public class ItemServiceImpl implements ItemService {
     public Item getItem(Long id) {
         return repository.getById(id);
     }
+
     @Override
-    public Optional<Item> getItemById(long id) {
-       if (!repository.existsById(id)) throw new RecordNotFoundException();
-        return repository.findById(id);
+    public ItemResponseDto getItemById(long id) {
+        Optional<Item> stored = repository.findById(id);
+
+        if (stored.isPresent()) {
+            URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+                    .buildAndExpand("download").toUri();
+
+           ItemResponseDto responseDto = new ItemResponseDto();
+            responseDto.setFileName(stored.get().getFileName());
+            responseDto.setName(stored.get().getName());
+            responseDto.setDescription(stored.get().getDescription());
+            responseDto.setMediaType(stored.get().getMediaType());
+            responseDto.setDownloadUri(uri.toString());
+            return responseDto;
+        }
+        else {
+            throw new RecordNotFoundException();
+        }
     }
+
     @Override
     public void updateItem(long id, Item item) {
         if (!repository.existsById(id)) throw new RecordNotFoundException();

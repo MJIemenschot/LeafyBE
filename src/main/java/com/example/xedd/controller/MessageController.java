@@ -39,7 +39,7 @@ public class MessageController {
         MessageResponseDto response = messageService.getFileById(id);
         return ResponseEntity.ok().body(response);
     }
-
+//werkt niet
     @GetMapping("files/{id}/fileName")
     public ResponseEntity downloadFile(@PathVariable("id") Long id) {
         Resource resource = messageService.downloadFile(id);
