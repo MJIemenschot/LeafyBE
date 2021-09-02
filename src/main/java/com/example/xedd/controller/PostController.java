@@ -71,9 +71,6 @@ private String fileupl;  // relative to root
                                                        Model model, HttpServletRequest request
             ,final @RequestParam("image") MultipartFile file) {
         try {
-
-
-
             String fileName = file.getOriginalFilename();
             String[] names = name.split(",");
             String[] descriptions = description.split(",");

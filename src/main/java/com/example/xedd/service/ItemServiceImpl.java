@@ -1,10 +1,13 @@
 package com.example.xedd.service;
 
+import com.example.xedd.dto.ItemRequestDto;
 import com.example.xedd.dto.ItemResponseDto;
+import com.example.xedd.dto.MessageRequestDto;
 import com.example.xedd.exception.FileStorageException;
 import com.example.xedd.exception.NotFoundException;
 import com.example.xedd.exception.RecordNotFoundException;
 import com.example.xedd.model.Item;
+import com.example.xedd.model.Message;
 import com.example.xedd.repository.ItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,7 +32,16 @@ public class ItemServiceImpl implements ItemService {
     //Uit FilestorageserviceImpl
     @Value("${app.upload.dir:...}")
     private String uploadDirectory;  // relative to root
-    Path uploads = Paths.get(".\\loadimg");
+    Path uploads = Paths.get(".\\upload");
+
+    @Override
+    public void init() {
+        try {
+            Files.createDirectory(uploads);
+        } catch (IOException e) {
+            throw new RuntimeException("Could not initialize folder for upload!");
+        }
+    }
 
 
     //    Path uploads = Paths.get(".\\uploads");
@@ -45,14 +57,36 @@ public class ItemServiceImpl implements ItemService {
 
 
 
-    @Override
-    public Item saveItem(Item item) {
-       return repository.save(item);
-    };
-
-//    public Item addItem(ItemResponseDto itemDto) {
-//        return repository.save(item);
+//    @Override
+//    public Item saveItem(Item item) {
+//       return repository.save(item);
 //    };
+
+
+    public long addItem(ItemRequestDto itemRequestDto) {
+
+        MultipartFile file =itemRequestDto.getFile();
+        String originalFilename = "";
+        Path copyLocation = null;
+        if (file != null) {
+            originalFilename = StringUtils.cleanPath(file.getOriginalFilename());
+            copyLocation = this.uploads.resolve(file.getOriginalFilename());
+            try {
+                Files.copy(file.getInputStream(), copyLocation, StandardCopyOption.REPLACE_EXISTING);
+            } catch (Exception e) {
+                throw new FileStorageException("Could not store file " + originalFilename + ". Please try again!");
+            }
+        }
+        Item newFileToStore = new Item();
+        newFileToStore.setFileName(originalFilename);
+        //newFileToStore.setUploadedByUsername(messageRequestDto.getUploadedByUsername());
+        if (copyLocation != null ) { newFileToStore.setLocation(copyLocation.toString()); }
+        newFileToStore.setName(itemRequestDto.getName());
+        newFileToStore.setDescription(itemRequestDto.getDescription());
+       Item saved = repository.save(newFileToStore);
+
+        return saved.getId();
+    }
 
 
 //    @Override

@@ -1,10 +1,13 @@
 package com.example.xedd.controller;
 
+import com.example.xedd.dto.ItemRequestDto;
+import com.example.xedd.dto.PostRequestDto;
 import com.example.xedd.model.Item;
 //import com.example.xedd.service.FileStorageService;
 //import com.example.xedd.service.FileStorageServiceImpl;
 import com.example.xedd.repository.ItemRepository;
 import com.example.xedd.service.ItemService;
+import com.example.xedd.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -13,11 +16,13 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 //import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.net.URI;
 
 @RestController
 @CrossOrigin("*")
@@ -29,8 +34,7 @@ public class ItemController {
     @Autowired
     ItemRepository itemRepository;
 
-//    @Autowired
-//    FileStorageService fileStorageService;
+
 
     private List<Item> items = new ArrayList<>();
 
@@ -132,30 +136,31 @@ public class ItemController {
 //            return new ResponseEntity<>(HttpStatus.I_AM_A_TEAPOT);
 //        }
 //    }
-    @PostMapping("")
-    public ResponseEntity<Object> createItem(@RequestBody Item item){
-        itemService.saveItem(item);
-        return ResponseEntity.ok("Added");
+//    @PostMapping("")
+//    public ResponseEntity<Object> createItem(@RequestBody Item item){
+//        itemService.saveItem(item);
+//        return ResponseEntity.ok("Added");
+//    }
+
+ //   uit voorbeeld met DTO
+    @PostMapping(value = "/add",
+           consumes = {MediaType.MULTIPART_FORM_DATA_VALUE},
+            produces = {MediaType.APPLICATION_JSON_VALUE} )
+    public ResponseEntity<Object> addItem(ItemRequestDto itemRequestDto) {
+        long newId = itemService.addItem(itemRequestDto);
+
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+                .buildAndExpand(newId).toUri();
+
+        return ResponseEntity.created(location).body(location);
     }
 
-    //uit voorbeeld met DTO
-//    @PostMapping(value = "/files",
-//           consumes = {MediaType.MULTIPART_FORM_DATA_VALUE},
-//            produces = {MediaType.APPLICATION_JSON_VALUE} )
-//    public ResponseEntity<Object> uploadFile(Method1RequestDto method1Dto) {
-//        long newId = methode1Service.uploadFile(method1Dto);
-//
-//        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-//                .buildAndExpand(newId).toUri();
-//
-//        return ResponseEntity.created(location).body(location);
-//    }
-//
     @GetMapping
     public List<Item> getAll(){
         return itemService.getAllItems();
     }
 
+//werkt niet
     @GetMapping("{id}/toPicture")
     public ResponseEntity downloadFile(@PathVariable("id") Long id) {
         Resource resource = itemService.downloadFile(id);
@@ -182,9 +187,7 @@ public class ItemController {
         itemService.partialUpdateItem(id, fields);
         return ResponseEntity.noContent().build();
     }
-
-
-    @DeleteMapping("/items/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Object> deleteFile(@PathVariable long id) {
         itemService.deleteItem(id);
         return ResponseEntity.noContent().build();

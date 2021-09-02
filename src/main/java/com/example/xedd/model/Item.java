@@ -12,10 +12,11 @@ public class Item {
     private long id;
 
     private String name;
-
     private String description;
-
     private String toPicture;
+    private String fileName;
+    private String mediaType;
+    private String location;
 
     //@Enumerated(value = EnumType.STRING)
     //private Difficulty difficulty;
@@ -54,12 +55,15 @@ public class Item {
 //        this.difficulty = difficulty;
 //    }
 
-    public Item(long id, String name, String description, String toPicture, Date uploadedDate, String user, Category category) {
+    public Item(long id, String name, String description, String toPicture,String fileName, String mediaType, String location,Date uploadedDate, String user, Category category) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.toPicture = toPicture;
         this.uploadedDate = uploadedDate;
+        this.fileName = fileName;
+        this.mediaType = mediaType;
+        this.location = location;
         //this.user = user;
         this.category = category;
     }
@@ -104,7 +108,31 @@ public class Item {
         this.uploadedDate = uploadedTimestamp;
     }
 
-//    public String getUser() {
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
+
+    public String getMediaType() {
+        return mediaType;
+    }
+
+    public void setMediaType(String mediaType) {
+        this.mediaType = mediaType;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    //    public String getUser() {
 //        return user;
 //    }
 //

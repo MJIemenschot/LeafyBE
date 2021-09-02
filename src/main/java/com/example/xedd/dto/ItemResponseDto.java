@@ -12,7 +12,11 @@ import java.util.Date;
 public class ItemResponseDto {
     public String name;
     public String description;
-    String toPicture;
+    private String toPicture;
+    private String location;
+    private String fileName;
+    private String mediaType;
+    private String downloadUri;
     //public boolean isSeed;
 
 

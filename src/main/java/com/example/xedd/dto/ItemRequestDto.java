@@ -5,11 +5,11 @@ import com.example.xedd.model.Item;
 import org.springframework.web.multipart.MultipartFile;
 @Data
 public class ItemRequestDto {
-    public long id;
-    public String name;
-    public String description;
+
+    private String name;
+    private String description;
     //public boolean isSeed;
-    public MultipartFile file;
+    private MultipartFile file;
 
 //    public static ItemRequestDto fromItem(Item item) {
 //        var dto = new ItemRequestDto();
