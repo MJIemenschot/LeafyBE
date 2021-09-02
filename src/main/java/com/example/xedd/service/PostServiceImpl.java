@@ -1,30 +1,18 @@
 package com.example.xedd.service;
 
-import com.example.xedd.dto.PostRequestDto;
-import com.example.xedd.dto.PostResponseDto;
 import com.example.xedd.exception.RecordNotFoundException;
 //import com.example.xedd.model.Item;
 import com.example.xedd.model.Post;
-import com.example.xedd.model.Product;
 import com.example.xedd.repository.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.sound.midi.Soundbank;
-import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 

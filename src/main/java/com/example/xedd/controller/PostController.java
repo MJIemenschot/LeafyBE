@@ -1,32 +1,22 @@
 package com.example.xedd.controller;
 
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Base64;
 import java.util.Date;
-import java.util.List;
 import java.util.Optional;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.example.xedd.model.Product;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.ByteArrayResource;
-import org.springframework.core.io.Resource;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -37,13 +27,8 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.bind.annotation.*;
 
 
-import com.example.xedd.dto.FileUploadResponse;
-import com.example.xedd.exception.RecordNotFoundException;
 import com.example.xedd.model.Post;
-import com.example.xedd.repository.PostRepository;
-import com.example.xedd.service.FileStorageService;
 import com.example.xedd.service.PostService;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 
 @RestController
@@ -51,14 +36,14 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 @RequestMapping(value = "")
 public class PostController {
 
-//    @Value("${app.upload.dir:${user.home}}")
+    //    @Value("${app.upload.dir:${user.home}}")
 //    private String temp;  // relative to root
 //    private final Path upload = Paths.get(".\\fileupl");
-@Value("${app.upload.dir:${user.home}}")
-private String fileupl;  // relative to root
+    @Value("${app.upload.dir:${user.home}}")
+    private String fileupl;  // relative to root
     // private String uploadDirectory;  // relative to root
     private final Path upload = Paths.get(".\\fileupl");
-//
+    //
     @Autowired
     PostService postService;
 
@@ -66,9 +51,9 @@ private String fileupl;  // relative to root
 
     @PostMapping(value="/savepost")
     public @ResponseBody ResponseEntity<?> savePost(@RequestParam("name") String name,
-                                                       //@RequestParam("difficulty") enum difficulty,
-                                                       @RequestParam("description") String description,
-                                                       Model model, HttpServletRequest request
+                                                    //@RequestParam("difficulty") enum difficulty,
+                                                    @RequestParam("description") String description,
+                                                    Model model, HttpServletRequest request
             ,final @RequestParam("image") MultipartFile file) {
         try {
             String fileName = file.getOriginalFilename();
@@ -81,7 +66,7 @@ private String fileupl;  // relative to root
             //log.info("price: " + price);
 //            try {
 
-                // Save the file locally
+            // Save the file locally
 //                BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(new File(toImage)));
 //                stream.write(file.getBytes());
 //                stream.close();
@@ -158,24 +143,24 @@ private String fileupl;  // relative to root
 
     @PostMapping("upload/local")
     public ResponseEntity<Object> addP(@RequestParam("image")MultipartFile image,
-                           @RequestParam("name") String name,
-                           @RequestParam("description") String description)
-             {
-                 postService.uploadFile(image);
-                 Post post = new Post();
-                 post.setName(name);
-                 post.setDescription(description);
+                                       @RequestParam("name") String name,
+                                       @RequestParam("description") String description)
+    {
+        postService.uploadFile(image);
+        Post post = new Post();
+        post.setName(name);
+        post.setDescription(description);
 
-                 postService.savePost(post);
+        postService.savePost(post);
 
-                 return ResponseEntity.noContent().build();
+        return ResponseEntity.noContent().build();
 
         //unzipFiles(multipartFile);
         //     fileUploadService.uploadToLocal(multipartFile);
 
 
     }
-  //  @PostMapping("/upload/db")
+    //  @PostMapping("/upload/db")
 
 //    public FileUploadResponse uploadDb(@RequestParam("file")MultipartFile multipartFile)
 //    {

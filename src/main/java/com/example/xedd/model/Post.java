@@ -31,8 +31,8 @@ public class Post {
 
     private boolean favourite;
 
-        @Enumerated(value = EnumType.STRING)
-        private Difficulty difficulty;
+    @Enumerated(value = EnumType.STRING)
+    private Difficulty difficulty;
 
 
     @Temporal(TemporalType.TIMESTAMP)
@@ -56,75 +56,75 @@ public class Post {
     }
 
     public Long getId() {
-                return id;
-        }
+        return id;
+    }
 
-        public void setId(Long id) {
-                this.id = id;
-        }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-        public String getName() {
-                return name;
-        }
+    public String getName() {
+        return name;
+    }
 
-        public void setName(String name) {
-                this.name = name;
-        }
+    public void setName(String name) {
+        this.name = name;
+    }
 
-        public String getDescription() {
-                return description;
-        }
+    public String getDescription() {
+        return description;
+    }
 
-        public void setDescription(String description) {
-                this.description = description;
-        }
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-        public String getToImage() {
-                return toImage;
-        }
+    public String getToImage() {
+        return toImage;
+    }
 
-        public void setToImage(String category) {
-                this.toImage = category;
-        }
+    public void setToImage(String category) {
+        this.toImage = category;
+    }
 
-        public byte[] getImage() {
-                return image;
-        }
+    public byte[] getImage() {
+        return image;
+    }
 
-        public void setImage(byte[] image) {
-                this.image = image;
-        }
+    public void setImage(byte[] image) {
+        this.image = image;
+    }
 
-        public String getByUser() {
-                return byUser;
-        }
+    public String getByUser() {
+        return byUser;
+    }
 
-        public void setByUser(String byUser) {
-                this.byUser = byUser;
-        }
+    public void setByUser(String byUser) {
+        this.byUser = byUser;
+    }
 
-        public boolean isFavourite() {
-                return favourite;
-        }
+    public boolean isFavourite() {
+        return favourite;
+    }
 
-        public void setFavourite(boolean favourite) {
-                this.favourite = favourite;
-        }
+    public void setFavourite(boolean favourite) {
+        this.favourite = favourite;
+    }
 
-        public Difficulty getDifficulty() {
-                return difficulty;
-        }
+    public Difficulty getDifficulty() {
+        return difficulty;
+    }
 
-        public void setDifficulty(Difficulty difficulty) {
-                this.difficulty = difficulty;
-        }
+    public void setDifficulty(Difficulty difficulty) {
+        this.difficulty = difficulty;
+    }
 
-        public Date getCreateDate() {
-                return createDate;
-        }
+    public Date getCreateDate() {
+        return createDate;
+    }
 
-        public void setCreateDate(Date createDate) { this.createDate = createDate;
-        }
+    public void setCreateDate(Date createDate) { this.createDate = createDate;
+    }
 
     public String getFileType() {
         return fileType;

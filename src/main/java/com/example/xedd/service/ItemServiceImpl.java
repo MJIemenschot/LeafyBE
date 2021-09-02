@@ -2,13 +2,10 @@ package com.example.xedd.service;
 
 import com.example.xedd.dto.ItemRequestDto;
 import com.example.xedd.dto.ItemResponseDto;
-import com.example.xedd.dto.MessageRequestDto;
-import com.example.xedd.dto.MessageResponseDto;
 import com.example.xedd.exception.FileStorageException;
 import com.example.xedd.exception.NotFoundException;
 import com.example.xedd.exception.RecordNotFoundException;
 import com.example.xedd.model.Item;
-import com.example.xedd.model.Message;
 import com.example.xedd.repository.ItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -70,13 +67,14 @@ public class ItemServiceImpl implements ItemService {
                 throw new FileStorageException("Could not store file " + originalFilename + ". Please try again!");
             }
         }
-        Item newFileToStore = new Item();
-        newFileToStore.setFileName(originalFilename);
-        //newFileToStore.setUploadedByUsername(messageRequestDto.getUploadedByUsername());
-        if (copyLocation != null ) { newFileToStore.setLocation(copyLocation.toString()); }
-        newFileToStore.setName(itemRequestDto.getName());
-        newFileToStore.setDescription(itemRequestDto.getDescription());
-       Item saved = repository.save(newFileToStore);
+        Item newItemToStore = new Item();
+        newItemToStore.setFileName(originalFilename);
+        //newItemToStore.setDifficulty(itemRequestDto.getDifficulty());
+        //newItemToStore.setUsername(itemRequestDto.getUsername());
+        if (copyLocation != null ) { newItemToStore.setLocation(copyLocation.toString()); }
+        newItemToStore.setName(itemRequestDto.getName());
+        newItemToStore.setDescription(itemRequestDto.getDescription());
+       Item saved = repository.save(newItemToStore);
 
         return saved.getId();
     }
@@ -116,6 +114,8 @@ public class ItemServiceImpl implements ItemService {
             responseDto.setName(stored.get().getName());
             responseDto.setDescription(stored.get().getDescription());
             responseDto.setMediaType(stored.get().getMediaType());
+//            responseDto.setUploadedDate(stored.get().getUploadedDate());
+//            responseDto.setUsername(stored.get().getUsername());
             responseDto.setDownloadUri(uri.toString());
             return responseDto;
         }
