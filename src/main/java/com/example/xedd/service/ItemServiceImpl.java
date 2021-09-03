@@ -58,7 +58,7 @@ public class ItemServiceImpl implements ItemService {
         String originalFilename = "";
         //dit heb ik hier niet nodig maar misschien wel bij items
         String toPicture = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path("/uploads/")
+                .path("/upload/")
                 .path(file.getOriginalFilename())
                 .toUriString();
         //item.setToPicture(toPicture);
