@@ -56,12 +56,11 @@ public class ItemServiceImpl implements ItemService {
 
         MultipartFile file =itemRequestDto.getFile();
         String originalFilename = "";
-        //dit heb ik hier niet nodig maar misschien wel bij items
+        //
         String toPicture = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path("/upload/")
                 .path(file.getOriginalFilename())
                 .toUriString();
-        //item.setToPicture(toPicture);
         //
         Path copyLocation = null;
         if (file != null) {
