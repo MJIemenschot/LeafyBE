@@ -22,12 +22,12 @@ public class Item {
 //    private boolean moderate;
 //    private boolean easy;
 
-//    @Enumerated(value = EnumType.STRING)
-//    private Difficulty difficulty;
+    @Enumerated(value = EnumType.STRING)
+    private Difficulty difficulty;
 //
-//    @Temporal(TemporalType.TIMESTAMP)
-//    @Column(name = "uploaded_date")
-//    private Date uploadedDate;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "uploaded_date")
+    private Date uploadedDate;
 
 //    @Column(name = "uploaded_by_username")
 //    @ManyToOne
@@ -64,7 +64,7 @@ public class Item {
         this.name = name;
         this.description = description;
         this.toPicture = toPicture;
-        //this.uploadedDate = uploadedDate;
+        this.uploadedDate = uploadedDate;
         this.fileName = fileName;
         this.mediaType = mediaType;
         this.location = location;
@@ -107,13 +107,13 @@ public class Item {
         this.toPicture = toPicture;
     }
 
-//    public Date getUploadedDate() {
-//        return uploadedDate;
-//    }
-//
-//    public void setUploadedDate(Date uploadedTimestamp) {
-//        this.uploadedDate = uploadedTimestamp;
-//    }
+    public Date getUploadedDate() {
+        return uploadedDate;
+    }
+
+    public void setUploadedDate(Date uploadedTimestamp) {
+        this.uploadedDate = uploadedTimestamp;
+    }
 
     public String getFileName() {
         return fileName;
@@ -179,11 +179,11 @@ public class Item {
         this.category = category;
     }
 
-//    public Difficulty getDifficulty() {
-//        return difficulty;
-//    }
-//
-//    public void setDifficulty(Difficulty difficulty) {
-//        this.difficulty = difficulty;
-//    }
+    public Difficulty getDifficulty() {
+        return difficulty;
+    }
+
+    public void setDifficulty(Difficulty difficulty) {
+        this.difficulty = difficulty;
+    }
 }

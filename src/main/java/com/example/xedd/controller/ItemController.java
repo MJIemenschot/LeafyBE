@@ -40,9 +40,9 @@ public class ItemController {
 
  //   uit voorbeeld met DTO
     @PostMapping(value = "/add",
-           consumes = {MediaType.MULTIPART_FORM_DATA_VALUE},
+            consumes = {MediaType.MULTIPART_FORM_DATA_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE} )
-    public ResponseEntity<Object> addItem(ItemRequestDto itemRequestDto) {
+        public ResponseEntity<Object> addItem(ItemRequestDto itemRequestDto) {
         long newId = itemService.addItem(itemRequestDto);
 
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
@@ -64,7 +64,7 @@ public class ItemController {
         String mediaType = "application/octet-stream";
         return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType(mediaType))
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename = \"" + fileName + "\"")
+                .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename = \"" + fileName + "\"")
                 .body(resource);
     }
 

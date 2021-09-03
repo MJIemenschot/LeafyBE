@@ -20,7 +20,7 @@ import java.util.Optional;
 @Transactional
 public class PostServiceImpl implements PostService{
 
-    private String fileStoragePath ="\\Users\\mieme\\Desktop\\uploaded";
+//    private String fileStoragePath ="\\Users\\mieme\\Desktop\\uploaded";
 //    private String fileStorageLocation;
 //    @Value("${uploadDir}")
 //    private String uploadFolder;
@@ -61,18 +61,18 @@ public class PostServiceImpl implements PostService{
 
     }
     ////////////////////////////////////
-    @Override
-    public void uploadFile(MultipartFile image){
-        try {
-            byte[] data = image.getBytes();
-            Path path = Paths.get(fileStoragePath + image.getOriginalFilename());
-            Files.write(path, data);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-    }
+//    @Override
+//    public void uploadFile(MultipartFile image){
+//        try {
+//            byte[] data = image.getBytes();
+//            Path path = Paths.get(fileStoragePath + image.getOriginalFilename());
+//            Files.write(path, data);
+//
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//
+//    }
 
 //    public void uploadToLocal(MultipartFile file) {
 //

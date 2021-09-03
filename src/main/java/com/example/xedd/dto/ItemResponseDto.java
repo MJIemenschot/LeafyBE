@@ -20,8 +20,8 @@ public class ItemResponseDto {
     private String fileName;
     private String mediaType;
     private String downloadUri;
-//    private Difficulty difficulty;
-//    private String username;
+    private Difficulty difficulty;
+    private String username;
 //    private boolean difficult;
 //    private boolean moderate;
 //    private boolean easy;

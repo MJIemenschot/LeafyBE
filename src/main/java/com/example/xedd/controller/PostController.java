@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.example.xedd.model.Post;
 import com.example.xedd.service.PostService;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 
 @RestController
@@ -52,6 +53,7 @@ public class PostController {
     @PostMapping(value="/savepost")
     public @ResponseBody ResponseEntity<?> savePost(@RequestParam("name") String name,
                                                     //@RequestParam("difficulty") enum difficulty,
+                                                    //@RequestParam("favourite") boolean favourite,
                                                     @RequestParam("description") String description,
                                                     Model model, HttpServletRequest request
             ,final @RequestParam("image") MultipartFile file) {
@@ -76,15 +78,17 @@ public class PostController {
 //            }
             byte[] imageData = file.getBytes();
             Post post = new Post();
-//            String toImage = ServletUriComponentsBuilder.fromCurrentContextPath()
-//                    .path("/api/v1/download/")
-//                    .path(file.getOriginalFilename())
-//                    .toUriString();
-//            post.setToImage(toImage);
+            //dit heb ik hier niet nodig maar misschien wel bij items
+            String toImage = ServletUriComponentsBuilder.fromCurrentContextPath()
+                    .path("/api/v1/download/")
+                    .path(file.getOriginalFilename())
+                    .toUriString();
+            post.setToImage(toImage);
+            //
             post.setFileType(file.getContentType());
             post.setName(names[0]);
             post.setImage(imageData);
-            //post.setPrice(price);
+            //post.setFavourite(favourite);
             post.setDescription(descriptions[0]);
             post.setCreateDate(createDate);
             postService.savePost(post);
@@ -141,25 +145,25 @@ public class PostController {
 
     //////////////
 
-    @PostMapping("upload/local")
-    public ResponseEntity<Object> addP(@RequestParam("image")MultipartFile image,
-                                       @RequestParam("name") String name,
-                                       @RequestParam("description") String description)
-    {
-        postService.uploadFile(image);
-        Post post = new Post();
-        post.setName(name);
-        post.setDescription(description);
-
-        postService.savePost(post);
-
-        return ResponseEntity.noContent().build();
-
-        //unzipFiles(multipartFile);
-        //     fileUploadService.uploadToLocal(multipartFile);
-
-
-    }
+//    @PostMapping("upload/local")
+//    public ResponseEntity<Object> addP(@RequestParam("image")MultipartFile image,
+//                                       @RequestParam("name") String name,
+//                                       @RequestParam("description") String description)
+//    {
+//        postService.uploadFile(image);
+//        Post post = new Post();
+//        post.setName(name);
+//        post.setDescription(description);
+//
+//        postService.savePost(post);
+//
+//        return ResponseEntity.noContent().build();
+//
+//        //unzipFiles(multipartFile);
+//        //     fileUploadService.uploadToLocal(multipartFile);
+//
+//
+//    }
     //  @PostMapping("/upload/db")
 
 //    public FileUploadResponse uploadDb(@RequestParam("file")MultipartFile multipartFile)

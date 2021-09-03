@@ -10,8 +10,8 @@ public class ItemRequestDto {
     private String name;
     private String description;
     private MultipartFile file;
-//    private Difficulty difficulty;
-//    private String username;
+    private Difficulty difficulty;
+    private String username;
 //    private boolean difficult;
 //    private boolean moderate;
 //    private boolean easy;

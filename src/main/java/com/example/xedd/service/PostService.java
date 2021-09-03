@@ -9,7 +9,7 @@ import java.util.Optional;
 public interface PostService {
 
      //void createPost(PostRequestDto postRequestDto);
-     void uploadFile(MultipartFile image);
+     //void uploadFile(MultipartFile image);
      //void addPost(MultipartFile image, String name, String description);
      void savePost(Post post);
      List<Post> getPosts();

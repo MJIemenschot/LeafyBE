@@ -52,11 +52,17 @@ public class ItemServiceImpl implements ItemService {
     }
 
 
-
     public long addItem(ItemRequestDto itemRequestDto) {
 
         MultipartFile file =itemRequestDto.getFile();
         String originalFilename = "";
+        //dit heb ik hier niet nodig maar misschien wel bij items
+        String toPicture = ServletUriComponentsBuilder.fromCurrentContextPath()
+                .path("/uploads/")
+                .path(file.getOriginalFilename())
+                .toUriString();
+        //item.setToPicture(toPicture);
+        //
         Path copyLocation = null;
         if (file != null) {
             originalFilename = StringUtils.cleanPath(file.getOriginalFilename());
@@ -69,9 +75,10 @@ public class ItemServiceImpl implements ItemService {
         }
         Item newItemToStore = new Item();
         newItemToStore.setFileName(originalFilename);
-        //newItemToStore.setDifficulty(itemRequestDto.getDifficulty());
-        //newItemToStore.setUsername(itemRequestDto.getUsername());
+        newItemToStore.setDifficulty(itemRequestDto.getDifficulty());
+        newItemToStore.setUsername(itemRequestDto.getUsername());
         if (copyLocation != null ) { newItemToStore.setLocation(copyLocation.toString()); }
+        newItemToStore.setToPicture(toPicture);
         newItemToStore.setName(itemRequestDto.getName());
         newItemToStore.setDescription(itemRequestDto.getDescription());
        Item saved = repository.save(newItemToStore);
