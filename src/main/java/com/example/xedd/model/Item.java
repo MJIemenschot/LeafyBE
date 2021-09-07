@@ -18,12 +18,19 @@ public class Item {
     private String mediaType;
     private String location;
     private String username;
-//    private boolean difficult;
-//    private boolean moderate;
-//    private boolean easy;
+
 
     @Enumerated(value = EnumType.STRING)
     private Difficulty difficulty;
+
+    @Enumerated(value = EnumType.STRING)
+    private Light light;
+
+    @Enumerated(value = EnumType.STRING)
+    private Food food;
+
+    @Enumerated(value = EnumType.STRING)
+    private Watering watering;
 //
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "uploaded_date")
@@ -34,19 +41,6 @@ public class Item {
 //    @JoinColumn(name="user_id")
     //private String user;
 
-    @ManyToOne
-    @JoinColumn(name="category_id")
-    private Category category;
-
-
-
-//    public Set<Category> getCategories(){
-//        return categories;
-//    }
-//
-//    private Date uploadedTimestamp;
-//
-//    LocalDateTime sentTime;
 
     //constructor empty
 
@@ -55,11 +49,20 @@ public class Item {
     //constructor
 
 
-//    public Item(Difficulty difficulty) {
-//        this.difficulty = difficulty;
-//    }
-
-    public Item(long id, String name, String description, String toPicture,String fileName, String mediaType, String location,Date uploadedDate, String username, Category category) {
+    public Item(long id,
+                String name,
+                String description,
+                String toPicture,
+                String fileName,
+                String mediaType,
+                String location,
+                Date uploadedDate,
+                String username,
+                Difficulty difficulty,
+                Light light,
+                Watering watering,
+                Food food
+    ) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -69,10 +72,12 @@ public class Item {
         this.mediaType = mediaType;
         this.location = location;
         this.username = username;
-        this.category = category;
-//        this.difficult = difficult;
-//        this.moderate = moderate;
-//        this.easy = easy;
+        this.difficulty = difficulty;
+        this.light = light;
+        this.food = food;
+        this.watering = watering;
+
+
     }
 
     public long getId() {
@@ -147,36 +152,28 @@ public class Item {
         this.username = username;
     }
 
-//    public boolean isDifficult() {
-//        return difficult;
-//    }
-//
-//    public void setDifficult(boolean difficult) {
-//        this.difficult = difficult;
-//    }
-//
-//    public boolean isModerate() {
-//        return moderate;
-//    }
-//
-//    public void setModerate(boolean moderate) {
-//        this.moderate = moderate;
-//    }
-//
-//    public boolean isEasy() {
-//        return easy;
-//    }
-//
-//    public void setEasy(boolean easy) {
-//        this.easy = easy;
-//    }
-
-    public Category getCategory() {
-        return category;
+    public Light getLight() {
+        return light;
     }
 
-    public void setCategory(Category category) {
-        this.category = category;
+    public void setLight(Light light) {
+        this.light = light;
+    }
+
+    public Food getFood() {
+        return food;
+    }
+
+    public void setFood(Food food) {
+        this.food = food;
+    }
+
+    public Watering getWatering() {
+        return watering;
+    }
+
+    public void setWatering(Watering watering) {
+        this.watering = watering;
     }
 
     public Difficulty getDifficulty() {

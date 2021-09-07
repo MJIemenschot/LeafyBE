@@ -25,5 +25,5 @@ public class ItemResponseDto {
 //    private boolean difficult;
 //    private boolean moderate;
 //    private boolean easy;
-//    private Date uploadedDate;
+    private Date uploadedDate;
 }
