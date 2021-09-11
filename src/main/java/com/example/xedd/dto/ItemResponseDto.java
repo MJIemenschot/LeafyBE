@@ -16,14 +16,12 @@ public class ItemResponseDto {
     public String name;
     public String description;
     private String toPicture;
-    private String location;
+    private MultipartFile file;
+    //private String location;
     private String fileName;
     private String mediaType;
     private String downloadUri;
     private Difficulty difficulty;
     private String username;
-//    private boolean difficult;
-//    private boolean moderate;
-//    private boolean easy;
     private Date uploadedDate;
 }

@@ -10,7 +10,7 @@ import java.util.Collection;
 @Repository
 public interface ItemRepository extends JpaRepository<Item, Long > {
     Collection<Item> findAllByName(String name);
-    Collection<Item> findByDifficulty(Difficulty difficulty);
+    Collection<Item> findAllByDifficulty(Difficulty difficulty);
 //    Collection<Item> getItemById(Long id);
 //    Collection<Item> findAllByDescription(String description);
 //    Collection<Item> findAllByNameAndDescription(String name, String description);

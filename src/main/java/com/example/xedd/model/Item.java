@@ -1,5 +1,7 @@
 package com.example.xedd.model;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import javax.persistence.*;
 import java.util.Date;
 
@@ -16,7 +18,7 @@ public class Item {
     private String toPicture;
     private String fileName;
     private String mediaType;
-    private String location;
+    //private MultipartFile file;
     private String username;
 
 
@@ -55,7 +57,7 @@ public class Item {
                 String toPicture,
                 String fileName,
                 String mediaType,
-                String location,
+                //MultipartFile file,
                 Date uploadedDate,
                 String username,
                 Difficulty difficulty,
@@ -70,7 +72,7 @@ public class Item {
         this.uploadedDate = uploadedDate;
         this.fileName = fileName;
         this.mediaType = mediaType;
-        this.location = location;
+        //this.file = file;
         this.username = username;
         this.difficulty = difficulty;
         this.light = light;
@@ -136,13 +138,13 @@ public class Item {
         this.mediaType = mediaType;
     }
 
-    public String getLocation() {
-        return location;
-    }
-
-    public void setLocation(String location) {
-        this.location = location;
-    }
+//    public MultipartFile getFile() {
+//        return file;
+//    }
+//
+//    public void setFile(MultipartFile file) {
+//        this.file = file;
+//    }
 
     public String getUsername() {
         return username;

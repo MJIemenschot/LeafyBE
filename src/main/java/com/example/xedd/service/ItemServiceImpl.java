@@ -5,6 +5,7 @@ import com.example.xedd.dto.ItemResponseDto;
 import com.example.xedd.exception.FileStorageException;
 import com.example.xedd.exception.NotFoundException;
 import com.example.xedd.exception.RecordNotFoundException;
+import com.example.xedd.model.Difficulty;
 import com.example.xedd.model.Item;
 import com.example.xedd.repository.ItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,6 +52,11 @@ public class ItemServiceImpl implements ItemService {
         return repository.findAll();
     }
 
+    @Override
+    public Collection<Item> findAllByDifficulty(Difficulty difficulty) {
+        return repository.findAllByDifficulty(difficulty);
+    }
+
 
     public long addItem(ItemRequestDto itemRequestDto) {
 
@@ -86,14 +92,6 @@ public class ItemServiceImpl implements ItemService {
         return saved.getId();
     }
 
-
-    @Override
-    public void deleteFile(String filename) throws IOException {
-        Path deleteLocation = Paths.get(uploads + File.separator + StringUtils.cleanPath(filename));
-        Files.delete(deleteLocation);
-    }
-
-
     public Collection<Item> getItems(String name) {
         if (name.isEmpty()) {
             return repository.findAll();
@@ -112,17 +110,19 @@ public class ItemServiceImpl implements ItemService {
         Optional<Item> stored = repository.findById(id);
 
         if (stored.isPresent()) {
-            URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-                    .buildAndExpand("download").toUri();
+//            URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+//                    .buildAndExpand("download").toUri();
 
            ItemResponseDto responseDto = new ItemResponseDto();
             responseDto.setFileName(stored.get().getFileName());
             responseDto.setName(stored.get().getName());
             responseDto.setDescription(stored.get().getDescription());
+            responseDto.setToPicture(stored.get().getToPicture());
             responseDto.setMediaType(stored.get().getMediaType());
-//            responseDto.setUploadedDate(stored.get().getUploadedDate());
-//            responseDto.setUsername(stored.get().getUsername());
-            responseDto.setDownloadUri(uri.toString());
+            responseDto.setUploadedDate(stored.get().getUploadedDate());
+            responseDto.setDifficulty(stored.get().getDifficulty());
+            responseDto.setUsername(stored.get().getUsername());
+            //responseDto.setDownloadUri(uri.toString());
             return responseDto;
         }
         else {
@@ -137,35 +137,75 @@ public class ItemServiceImpl implements ItemService {
         existingItem.setName(item.getName());
         existingItem.setDescription(item.getDescription());
         existingItem.setToPicture(item.getToPicture());
+        existingItem.setDifficulty(item.getDifficulty());
 
         repository.save(existingItem);
-
     }
-
     @Override
-    public void partialUpdateItem(long id, Map<String, String> fields) {
+    public void partialUpdateItem(long id, ItemRequestDto itemRequestDto) {
         if (!repository.existsById(id)) throw new RecordNotFoundException();
-        Item item = repository.findById(id).get();
-        for (String field : fields.keySet()) {
-            switch (field.toLowerCase()) {
-                case "name":
-                    item.setName((String) fields.get(field));
-                    break;
-                case "description":
-                    item.setDescription((String) fields.get(field));
-                    break;
-                case "toPicture":
-                    item.setToPicture((String) fields.get(field));
-
+        Item changedItem = repository.findById(id).get();
+        MultipartFile file =itemRequestDto.getFile();
+        String originalFilename = "";
+        String toPicture = ServletUriComponentsBuilder.fromCurrentContextPath()
+                .path("/upload/")
+                .path(file.getOriginalFilename())
+                .toUriString();
+        Path copyLocation = null;
+        if (file != null) {
+            originalFilename = StringUtils.cleanPath(file.getOriginalFilename());
+            copyLocation = this.uploads.resolve(file.getOriginalFilename());
+            try {
+                Files.copy(file.getInputStream(), copyLocation, StandardCopyOption.REPLACE_EXISTING);
+            } catch (Exception e) {
+                throw new FileStorageException("Could not store file " + originalFilename + ". Please try again!");
             }
         }
-        repository.save(item);
-
+        changedItem.setFileName(originalFilename);
+        changedItem.setToPicture(toPicture);
+        changedItem.setName(itemRequestDto.getName());
+        changedItem.setDescription(itemRequestDto.getDescription());
+        changedItem.setDifficulty(itemRequestDto.getDifficulty());
+        repository.save(changedItem);
     }
+
+
+//    @Override
+//    public void partialUpdateItem(long id, Map<String, String> fields) {
+//        if (!repository.existsById(id)) throw new RecordNotFoundException();
+//        Item item = repository.findById(id).get();
+//        for (String field : fields.keySet()) {
+//            switch (field.toLowerCase()) {
+//                case "name":
+//                    item.setName((String) fields.get(field));
+//                    break;
+//                case "description":
+//                    item.setDescription((String) fields.get(field));
+//                    break;
+//                case "toPicture":
+//                    item.setToPicture((String) fields.get(field));
+//                case "file":
+//
+//            }
+//        }
+//        repository.save(item);
+//
+//    }
     @Override
     public void deleteItem(long id) {
         if (!repository.existsById(id)) throw new RecordNotFoundException();
         repository.deleteById(id);
+    }
+
+    @Override
+    public boolean itemExistsById(long id) {
+        return  repository.existsById(id);
+    }
+
+    @Override
+    public void deleteFile(String filename) throws IOException {
+        Path deleteLocation = Paths.get(uploads + File.separator + StringUtils.cleanPath(filename));
+        Files.delete(deleteLocation);
     }
 
     public Resource downloadFile(Long id) {
@@ -189,11 +229,6 @@ public class ItemServiceImpl implements ItemService {
         return null;
     }
 
-
-    @Override
-    public boolean itemExistsById(long id) {
-        return  repository.existsById(id);
-    }
 
 }
 
