@@ -5,8 +5,7 @@ import com.example.xedd.dto.ItemResponseDto;
 import com.example.xedd.exception.FileStorageException;
 import com.example.xedd.exception.NotFoundException;
 import com.example.xedd.exception.RecordNotFoundException;
-import com.example.xedd.model.Difficulty;
-import com.example.xedd.model.Item;
+import com.example.xedd.model.*;
 import com.example.xedd.repository.ItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -56,7 +55,18 @@ public class ItemServiceImpl implements ItemService {
     public Collection<Item> findAllByDifficulty(Difficulty difficulty) {
         return repository.findAllByDifficulty(difficulty);
     }
-
+    @Override
+    public Collection<Item> findAllByLight(Light light) {
+        return repository.findAllByLight(light);
+    }
+    @Override
+    public Collection<Item> findAllByWatering(Watering watering) {
+        return repository.findAllByWatering(watering);
+    }
+    @Override
+    public Collection<Item> findAllByFood(Food food) {
+        return repository.findAllByFood(food);
+    }
 
     public long addItem(ItemRequestDto itemRequestDto) {
 

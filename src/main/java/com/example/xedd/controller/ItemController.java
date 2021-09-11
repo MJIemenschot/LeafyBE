@@ -3,8 +3,7 @@ package com.example.xedd.controller;
 import com.example.xedd.dto.ItemRequestDto;
 //import com.example.xedd.dto.PostRequestDto;
 import com.example.xedd.exception.NotFoundException;
-import com.example.xedd.model.Difficulty;
-import com.example.xedd.model.Item;
+import com.example.xedd.model.*;
 
 import com.example.xedd.repository.ItemRepository;
 import com.example.xedd.service.ItemService;
@@ -63,9 +62,21 @@ public class ItemController {
         return itemService.getAllItems();
     }
 
-    @GetMapping("/byDifficulty/{difficulty}")
+    @GetMapping("/{difficulty}")
     public Collection<Item> getByDifficulty(@PathVariable("difficulty") Difficulty difficulty) {
         return itemService.findAllByDifficulty(difficulty); }
+
+    @GetMapping("/{light}")
+    public Collection<Item> getByLigth(@PathVariable("light") Light light) {
+        return itemService.findAllByLight(light); }
+
+    @GetMapping("/{watering}")
+    public Collection<Item> getByWatering(@PathVariable("watering") Watering watering) {
+        return itemService.findAllByWatering(watering); }
+
+    @GetMapping("/{food}")
+    public Collection<Item> getByFood(@PathVariable("food") Food food) {
+        return itemService.findAllByFood(food); }
 
 
 ////werkt niet

@@ -78,8 +78,6 @@ public class Item {
         this.light = light;
         this.food = food;
         this.watering = watering;
-
-
     }
 
     public long getId() {
