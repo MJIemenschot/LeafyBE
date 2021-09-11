@@ -1,8 +1,7 @@
 package com.example.xedd.dto;
 
-import com.example.xedd.model.Difficulty;
+import com.example.xedd.model.*;
 import lombok.Data;
-import com.example.xedd.model.Item;
 import org.springframework.web.multipart.MultipartFile;
 @Data
 public class ItemRequestDto {
@@ -11,6 +10,9 @@ public class ItemRequestDto {
     private String description;
     private MultipartFile file;
     private Difficulty difficulty;
+    private Light light;
+    private Watering watering;
+    private Food food;
     private String username;
 //    private boolean difficult;
 //    private boolean moderate;

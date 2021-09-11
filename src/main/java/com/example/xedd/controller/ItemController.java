@@ -62,19 +62,19 @@ public class ItemController {
         return itemService.getAllItems();
     }
 
-    @GetMapping("/{difficulty}")
+    @GetMapping("/byD/{difficulty}")
     public Collection<Item> getByDifficulty(@PathVariable("difficulty") Difficulty difficulty) {
         return itemService.findAllByDifficulty(difficulty); }
 
-    @GetMapping("/{light}")
+    @GetMapping("/byL/{light}")
     public Collection<Item> getByLigth(@PathVariable("light") Light light) {
         return itemService.findAllByLight(light); }
 
-    @GetMapping("/{watering}")
+    @GetMapping("/byW/{watering}")
     public Collection<Item> getByWatering(@PathVariable("watering") Watering watering) {
         return itemService.findAllByWatering(watering); }
 
-    @GetMapping("/{food}")
+    @GetMapping("/byF/{food}")
     public Collection<Item> getByFood(@PathVariable("food") Food food) {
         return itemService.findAllByFood(food); }
 

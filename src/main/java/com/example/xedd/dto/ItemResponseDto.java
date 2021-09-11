@@ -1,7 +1,6 @@
 package com.example.xedd.dto;
 
-import com.example.xedd.model.Difficulty;
-import com.example.xedd.model.Item;
+import com.example.xedd.model.*;
 import com.example.xedd.service.ItemService;
 import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,8 +19,11 @@ public class ItemResponseDto {
     //private String location;
     private String fileName;
     private String mediaType;
-    private String downloadUri;
+    //private String downloadUri;
     private Difficulty difficulty;
+    private Light light;
+    private Watering watering;
+    private Food food;
     private String username;
     private Date uploadedDate;
 }

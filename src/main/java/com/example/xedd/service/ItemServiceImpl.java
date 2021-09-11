@@ -91,6 +91,9 @@ public class ItemServiceImpl implements ItemService {
         Item newItemToStore = new Item();
         newItemToStore.setFileName(originalFilename);
         newItemToStore.setDifficulty(itemRequestDto.getDifficulty());
+        newItemToStore.setLight(itemRequestDto.getLight());
+        newItemToStore.setWatering(itemRequestDto.getWatering());
+        newItemToStore.setFood(itemRequestDto.getFood());
         newItemToStore.setUsername(itemRequestDto.getUsername());
 //        if (copyLocation != null ) { newItemToStore.setLocation(copyLocation.toString()); }
         newItemToStore.setToPicture(toPicture);
@@ -131,6 +134,10 @@ public class ItemServiceImpl implements ItemService {
             responseDto.setMediaType(stored.get().getMediaType());
             responseDto.setUploadedDate(stored.get().getUploadedDate());
             responseDto.setDifficulty(stored.get().getDifficulty());
+            responseDto.setLight(stored.get().getLight());
+            responseDto.setWatering(stored.get().getWatering());
+            responseDto.setFood(stored.get().getFood());
+
             responseDto.setUsername(stored.get().getUsername());
             //responseDto.setDownloadUri(uri.toString());
             return responseDto;
@@ -148,6 +155,9 @@ public class ItemServiceImpl implements ItemService {
         existingItem.setDescription(item.getDescription());
         existingItem.setToPicture(item.getToPicture());
         existingItem.setDifficulty(item.getDifficulty());
+        existingItem.setLight(item.getLight());
+        existingItem.setWatering(item.getWatering());
+        existingItem.setFood(item.getFood());
 
         repository.save(existingItem);
     }
@@ -176,6 +186,9 @@ public class ItemServiceImpl implements ItemService {
         changedItem.setName(itemRequestDto.getName());
         changedItem.setDescription(itemRequestDto.getDescription());
         changedItem.setDifficulty(itemRequestDto.getDifficulty());
+        changedItem.setLight(itemRequestDto.getLight());
+        changedItem.setWatering(itemRequestDto.getWatering());
+        changedItem.setFood(itemRequestDto.getFood());
         repository.save(changedItem);
     }
 
