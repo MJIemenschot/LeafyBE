@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 
@@ -126,11 +127,48 @@ public class ItemController {
     public ResponseEntity<Object> getItemById(@PathVariable("id") long id) {
         return ResponseEntity.ok().body(itemService.getItemById(id));
     }
+    @GetMapping(value="/by/{name}")
+    public ResponseEntity<Object> getItemByName(@PathVariable("name") String name) {
+        return ResponseEntity.ok().body(itemService.getAllByName(name));
+    }
+//    //Werkt goed zonder nieuwe fileupload
     @PutMapping(value = "/{id}")
     public ResponseEntity<Object> updateItem(@PathVariable("id") long id, @RequestBody Item item) {
         itemService.updateItem(id, item);
         return ResponseEntity.noContent().build();
     }
+//probeersel met fileupload
+    @PutMapping(value = "/update/sjaak",
+    consumes = {MediaType.MULTIPART_FORM_DATA_VALUE},
+    produces = {MediaType.APPLICATION_JSON_VALUE} )
+    public ResponseEntity<Object> updateItem(ItemRequestDto itemRequestDto) {
+        //long newId =
+                itemService.updateItem(itemRequestDto);
+
+        URI toPicture = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+                .buildAndExpand().toUri();
+
+        return ResponseEntity.created(toPicture).body(toPicture);
+    }
+
+
+
+//    @PutMapping(value = "/update/{id}",
+//            consumes = {MediaType.MULTIPART_FORM_DATA_VALUE},
+//            produces = {MediaType.APPLICATION_JSON_VALUE} )
+//            public ResponseEntity<Object>updateItemBy(@PathVariable("id")long id, @RequestBody Item item, @RequestParam MultipartFile file){
+//        itemService.updateItemBy(id, item, file);
+//        return ResponseEntity.noContent().build();
+
+//    }
+
+//    @PutMapping(value = "/upd/{id}",
+//    consumes = {MediaType.MULTIPART_FORM_DATA_VALUE},
+//    produces = {MediaType.APPLICATION_JSON_VALUE} )
+//    public ResponseEntity<Object> partialUpdateItem(@PathVariable("id") long id, @RequestBody ItemRequestDto itemRequestDto) {
+//        itemService.partialUpdateItem(id, itemRequestDto);
+//        return ResponseEntity.noContent().build();
+//    }
 //    @PutMapping(value = "/{id}")
 //    public ResponseEntity<Object> updateItem(@PathVariable("id") long id, @RequestBody ItemRequestDto itemRequestDto) {
 //        itemService.updateItem(id, itemRequestDTO);
@@ -144,20 +182,6 @@ public class ItemController {
 //    return ItemResponseDto(Item item);
 //
 //}
-@PatchMapping(value = "/{id}",
-        consumes = {MediaType.MULTIPART_FORM_DATA_VALUE},
-        produces = {MediaType.APPLICATION_JSON_VALUE} )
-    public ResponseEntity<Object> updateItemPartial(@PathVariable("id") long id, @RequestBody ItemRequestDto itemRequestDto) {
-
-        itemService.partialUpdateItem(id, itemRequestDto);
-        return ResponseEntity.noContent().build();
-    }
-
-//    @PatchMapping(value = "/{id}")
-//    public ResponseEntity<Object> updateItemPartial(@PathVariable("id") long id, @RequestBody Map<String, String> fields) {
-//        itemService.partialUpdateItem(id, fields);
-//        return ResponseEntity.noContent().build();
-//    }
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> deleteFile(@PathVariable long id) {
         itemService.deleteItem(id);

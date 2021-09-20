@@ -12,7 +12,6 @@ public class Item {
     @Id
     @GeneratedValue (strategy = GenerationType.AUTO)
     private long id;
-
     private String name;
     private String description;
     private String toPicture;
@@ -57,7 +56,7 @@ public class Item {
                 String toPicture,
                 String fileName,
                 String mediaType,
-                //MultipartFile file,
+                MultipartFile file,
                 Date uploadedDate,
                 String username,
                 Difficulty difficulty,

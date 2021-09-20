@@ -38,14 +38,33 @@ public class UserServiceImpl implements UserService{
         return userRepository.existsById(username);
     }
 
+//    @Override
+//    public String createUser(User user) {
+//        String randomString = RandomStringGenerator.generateAlphaNumeric(20);
+//        user.setApikey(randomString);
+//        user.setPassword(passwordEncoder.encode(user.getPassword()));
+//        User newUser = userRepository.save(user);
+//        return newUser.getUsername();
+//    }
     @Override
     public String createUser(User user) {
+        if (userExists(user.getUsername())) {
+            throw new UsernameNotFoundException("Username is al in gebuik");
+        }
         String randomString = RandomStringGenerator.generateAlphaNumeric(20);
+        user.setEmail(user.getEmail());
         user.setApikey(randomString);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        User newUser = userRepository.save(user);
-        return newUser.getUsername();
+        //user.setId((getUsers().size())+1);
+        //Het volgende geef ik nu in de frontend mee
+//user.getAuthorities().clear();
+//user.addAuthority(new Authority(user.getUsername(),"ROLE_USER"));
+
+    User newUser = userRepository.save(user);
+
+return newUser.getUsername();
     }
+
 
     @Override
     public void deleteUser(String username) {

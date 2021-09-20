@@ -14,6 +14,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -60,6 +61,28 @@ public class PostServiceImpl implements PostService{
         postRepository.save(existingPost);
 
     }
+        @Override
+    public void partialUpdatePost(long id, Map<String, String> fields) {
+        if (!postRepository.existsById(id)) throw new RecordNotFoundException();
+        Post post = postRepository.findById(id).get();
+        for (String field : fields.keySet()) {
+            switch (field.toLowerCase()) {
+                case "name":
+                    post.setName((String) fields.get(field));
+                    break;
+                case "description":
+                    post.setDescription((String) fields.get(field));
+                    break;
+                case "toPicture":
+                    //post.setToPicture((String) fields.get(field));
+                case "file":
+
+            }
+        }
+        postRepository.save(post);
+
+    }
+
     ////////////////////////////////////
 //    @Override
 //    public void uploadFile(MultipartFile image){

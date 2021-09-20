@@ -4,6 +4,7 @@ import com.example.xedd.model.Post;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 //
 public interface PostService {
@@ -14,7 +15,8 @@ public interface PostService {
      void savePost(Post post);
      List<Post> getPosts();
      Optional<Post> getPostById(Long id);
-     // void partialUpdatePost(long id, Map<String, String> fields);
+     //void partialUpdatePost(long id, Map<String, String> fields);
+     void partialUpdatePost(long id, Map<String, String> fields);
      void updatePost(long id, Post post);
      void deletePost(long id);
 

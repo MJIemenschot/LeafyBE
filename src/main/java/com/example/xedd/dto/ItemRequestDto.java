@@ -5,7 +5,7 @@ import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
 @Data
 public class ItemRequestDto {
-
+    private Long id;
     private String name;
     private String description;
     private MultipartFile file;
@@ -14,8 +14,8 @@ public class ItemRequestDto {
     private Watering watering;
     private Food food;
     private String username;
-//    private boolean difficult;
-//    private boolean moderate;
-//    private boolean easy;
+//    private boolean favourite;
+
+
 
 }

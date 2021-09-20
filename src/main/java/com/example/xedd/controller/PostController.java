@@ -78,13 +78,6 @@ public class PostController {
 //            }
             byte[] imageData = file.getBytes();
             Post post = new Post();
-            //dit heb ik hier niet nodig maar misschien wel bij items
-//            String toImage = ServletUriComponentsBuilder.fromCurrentContextPath()
-//                    .path("/api/v1/download/")
-//                    .path(file.getOriginalFilename())
-//                    .toUriString();
-//            post.setToImage(toImage);
-            //
             post.setFileType(file.getContentType());
             post.setName(names[0]);
             post.setImage(imageData);

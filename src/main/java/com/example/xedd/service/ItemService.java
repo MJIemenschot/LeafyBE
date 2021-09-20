@@ -18,7 +18,7 @@ public interface ItemService {
     void init();
 
     List<Item> getAllItems();
-    Collection<Item> getItems(String name);
+    Collection<Item> getAllByName(String name);
     Item getItem(Long id);
     ItemResponseDto getItemById(long id);
     void deleteItem(long id);
@@ -28,9 +28,9 @@ public interface ItemService {
     Collection<Item>findAllByLight(Light light);
     Collection<Item>findAllByWatering(Watering watering);
     Collection<Item>findAllByFood(Food food);
-    //void updateItem(long id, ItemRequestDto itemRequestDto);
     //Resource downloadFile(Long id);
-    public void partialUpdateItem(long id, ItemRequestDto itemRequestDto);
+    public void updateItem(ItemRequestDto itemRequestDto);
+    //public void updateItemBy(long id, Item item, MultipartFile file );
     //void partialUpdateItem(long id, Map<String, String> fields);
     void deleteFile(String filename) throws IOException;
     public boolean itemExistsById(long id);
