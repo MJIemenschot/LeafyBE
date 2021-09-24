@@ -127,8 +127,8 @@ public class ItemServiceImpl implements ItemService {
         if (stored.isPresent()) {
 //            URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
 //                    .buildAndExpand("download").toUri();
-
             ItemResponseDto responseDto = new ItemResponseDto();
+            responseDto.setId(stored.get().getId());
             responseDto.setFileName(stored.get().getFileName());
             responseDto.setName(stored.get().getName());
             responseDto.setDescription(stored.get().getDescription());
@@ -139,7 +139,6 @@ public class ItemServiceImpl implements ItemService {
             responseDto.setLight(stored.get().getLight());
             responseDto.setWatering(stored.get().getWatering());
             responseDto.setFood(stored.get().getFood());
-
             responseDto.setUsername(stored.get().getUsername());
             //responseDto.setDownloadUri(uri.toString());
             return responseDto;
@@ -191,6 +190,7 @@ public void updateItem(ItemRequestDto itemRequestDto) {
         ItemToStore.setWatering(itemRequestDto.getWatering());
         ItemToStore.setFood(itemRequestDto.getFood());
 //        if (copyLocation != null ) { newItemToStore.setLocation(copyLocation.toString()); }
+        //ItemToStore.setUsername(itemRequestDto.getUserName());
         ItemToStore.setToPicture(toPicture);
         ItemToStore.setName(itemRequestDto.getName());
         ItemToStore.setDescription(itemRequestDto.getDescription());
@@ -199,120 +199,45 @@ public void updateItem(ItemRequestDto itemRequestDto) {
 
 }
 
-//    @Override
-//    public void updateItemBy(long id, Item item, MultipartFile file) {
-//        if (!repository.existsById(id)) throw new RecordNotFoundException();
-//        Item newItem = repository.findById(id).get();
-//        try {
-//            byte[] data = file.getBytes();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//        //MultipartFile file =item.getFile();
-//        String originalFilename = "";
-//        String toPicture = ServletUriComponentsBuilder.fromCurrentContextPath()
-//                .path("/upload/")
-//                .path(file.getOriginalFilename())
-//                .toUriString();
-//        Path copyLocation = null;
-//        if (file != null) {
-//            originalFilename = StringUtils.cleanPath(file.getOriginalFilename());
-//            copyLocation = this.uploads.resolve(file.getOriginalFilename());
-//            try {
-//                Files.copy(file.getInputStream(), copyLocation, StandardCopyOption.REPLACE_EXISTING);
-//            } catch (Exception e) {
-//                throw new FileStorageException("Could not store file " + originalFilename + ". Please try again!");
-//            }
-//        }
-//        newItem.setFileName(originalFilename);
-//        newItem.setDifficulty(item.getDifficulty());
-//        newItem.setLight(item.getLight());
-//        newItem.setWatering(item.getWatering());
-//        newItem.setFood(item.getFood());
-////        if (copyLocation != null ) { newItemToStore.setLocation(copyLocation.toString()); }
-//        newItem.setToPicture(toPicture);
-//        newItem.setName(item.getName());
-//        newItem.setDescription(item.getDescription());
-//
-//        Item saved = repository.save(newItem);
-//
-//    }
-
-//    Item newItem = new Item();
-//    newItem.setFileName(originalFilename);
-//
-//        newItem.setDifficulty(
-//
-//    getDifficulty());
-//        newItem.setLight(
-//
-//    getLight());
-//        newItem.setWatering(
-//
-//    getWatering());
-//        newItem.setFood(
-//
-//    getFood());
-//        newItem.setUsername(
-//
-//    getUsername());
-////        if (copyLocation != null ) { newItemToStore.setLocation(copyLocation.toString()); }
-//        newItem.setToPicture(toPicture);
-//        newItem.setName(
-//
-//    getName());
-//        newItem.setDescription(
-//
-//    getDescription());
-//        newItem.setUploadedDate(createDate);
-//   repository.save(newItem);
-//}
-
-
-
-
-//    @Override
-//    public void partialUpdateItem(long id, ItemRequestDto itemRequestDto) {
-//        if (!repository.existsById(id)) throw new RecordNotFoundException();
-//        Item changedItem = repository.findById(id).get();
-//        MultipartFile file =itemRequestDto.getFile();
-//        String originalFilename = "";
-//        String toPicture = ServletUriComponentsBuilder.fromCurrentContextPath()
-//                .path("/upload/")
-//                .path(file.getOriginalFilename())
-//                .toUriString();
-//        Path copyLocation = null;
-//        if (file != null) {
-//            originalFilename = StringUtils.cleanPath(file.getOriginalFilename());
-//            copyLocation = this.uploads.resolve(file.getOriginalFilename());
-//            try {
-//                Files.copy(file.getInputStream(), copyLocation, StandardCopyOption.REPLACE_EXISTING);
-//            } catch (Exception e) {
-//                throw new FileStorageException("Could not store file " + originalFilename + ". Please try again!");
-//            }
-//        }
-//        changedItem.setFileName(originalFilename);
-//        changedItem.setToPicture(toPicture);
-//        changedItem.setName(itemRequestDto.getName());
-//        changedItem.setDescription(itemRequestDto.getDescription());
-//        changedItem.setDifficulty(itemRequestDto.getDifficulty());
-//        changedItem.setLight(itemRequestDto.getLight());
-//        changedItem.setWatering(itemRequestDto.getWatering());
-//        changedItem.setFood(itemRequestDto.getFood());
-//        repository.save(changedItem);
-//    }
-
 
     @Override
     public void deleteItem(long id) {
         if (!repository.existsById(id)) throw new RecordNotFoundException();
         repository.deleteById(id);
-        //bestandsnaam uit database
     }
     @Override
     public void deleteFile(String filename) throws IOException {
         Path deleteLocation = Paths.get(uploads + File.separator + StringUtils.cleanPath(filename));
         Files.delete(deleteLocation);
+    }
+//    @Override
+//    public void deleteItemWithFile(long id, String filename) {
+//        if (!repository.existsById(id)) throw new RecordNotFoundException();
+//        repository.deleteById(id);
+//        Path deleteLocation = Paths.get(uploads + File.separator + StringUtils.cleanPath(filename));
+//        try {
+//            Files.delete(deleteLocation);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
+    @Override
+    public void deleteItemWithFile(long id, String filename) {
+        Optional<Item> stored = repository.findById(id);
+        if (stored.isPresent()) {
+            //String fileName = stored.get().getToPicture();
+            Path deleteLocation = Paths.get(uploads + File.separator + StringUtils.cleanPath(filename));
+            try {
+                repository.deleteById(id);
+                Files.delete(deleteLocation);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            throw new NotFoundException();
+        }
+      //  return null;
+
     }
 
     @Override
@@ -320,11 +245,16 @@ public void updateItem(ItemRequestDto itemRequestDto) {
         return  repository.existsById(id);
     }
 
+//    @Override
+//    public void deleteItem(long id) {
+//
+//        //bestandsnaam uit database
+//    }
+
 
 
     public Resource downloadFile(Long id) {
         Optional<Item> stored = repository.findById(id);
-
         if (stored.isPresent()) {
             String fileName = stored.get().getToPicture();
             Path path = this.uploads.resolve(fileName);

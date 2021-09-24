@@ -12,6 +12,7 @@ import java.util.Date;
 
 @Data
 public class ItemResponseDto {
+    private Long id;
     public String name;
     public String description;
     private String toPicture;

@@ -17,7 +17,6 @@ public class Item {
     private String toPicture;
     private String fileName;
     private String mediaType;
-    //private MultipartFile file;
     private String username;
 
 

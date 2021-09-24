@@ -39,7 +39,6 @@ public class ItemController {
     ItemRepository itemRepository;
 
 
-
     private List<Item> items = new ArrayList<>();
     private ItemRequestDto itemRequestDTO;
     private Enum Difficulty;
@@ -48,8 +47,8 @@ public class ItemController {
     //   uit voorbeeld met DTO
     @PostMapping(value = "/add",
             consumes = {MediaType.MULTIPART_FORM_DATA_VALUE},
-            produces = {MediaType.APPLICATION_JSON_VALUE} )
-        public ResponseEntity<Object> addItem(ItemRequestDto itemRequestDto) {
+            produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<Object> addItem(ItemRequestDto itemRequestDto) {
         long newId = itemService.addItem(itemRequestDto);
 
         URI toPicture = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
@@ -59,25 +58,29 @@ public class ItemController {
     }
 
     @GetMapping
-    public List<Item> getAll(){
+    public List<Item> getAll() {
         return itemService.getAllItems();
     }
 
     @GetMapping("/byD/{difficulty}")
     public Collection<Item> getByDifficulty(@PathVariable("difficulty") Difficulty difficulty) {
-        return itemService.findAllByDifficulty(difficulty); }
+        return itemService.findAllByDifficulty(difficulty);
+    }
 
     @GetMapping("/byL/{light}")
     public Collection<Item> getByLigth(@PathVariable("light") Light light) {
-        return itemService.findAllByLight(light); }
+        return itemService.findAllByLight(light);
+    }
 
     @GetMapping("/byW/{watering}")
     public Collection<Item> getByWatering(@PathVariable("watering") Watering watering) {
-        return itemService.findAllByWatering(watering); }
+        return itemService.findAllByWatering(watering);
+    }
 
     @GetMapping("/byF/{food}")
     public Collection<Item> getByFood(@PathVariable("food") Food food) {
-        return itemService.findAllByFood(food); }
+        return itemService.findAllByFood(food);
+    }
 
 
 ////werkt niet
@@ -127,31 +130,32 @@ public class ItemController {
     public ResponseEntity<Object> getItemById(@PathVariable("id") long id) {
         return ResponseEntity.ok().body(itemService.getItemById(id));
     }
-    @GetMapping(value="/by/{name}")
+
+    @GetMapping(value = "/by/{name}")
     public ResponseEntity<Object> getItemByName(@PathVariable("name") String name) {
         return ResponseEntity.ok().body(itemService.getAllByName(name));
     }
-//    //Werkt goed zonder nieuwe fileupload
+
+    //    //Werkt goed zonder nieuwe fileupload
     @PutMapping(value = "/{id}")
     public ResponseEntity<Object> updateItem(@PathVariable("id") long id, @RequestBody Item item) {
         itemService.updateItem(id, item);
         return ResponseEntity.noContent().build();
     }
-//probeersel met fileupload
-    @PutMapping(value = "/update/sjaak",
-    consumes = {MediaType.MULTIPART_FORM_DATA_VALUE},
-    produces = {MediaType.APPLICATION_JSON_VALUE} )
+
+    //werkt met fileupload
+    @PutMapping(value = "/update",
+            consumes = {MediaType.MULTIPART_FORM_DATA_VALUE},
+            produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<Object> updateItem(ItemRequestDto itemRequestDto) {
         //long newId =
-                itemService.updateItem(itemRequestDto);
+        itemService.updateItem(itemRequestDto);
 
         URI toPicture = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
                 .buildAndExpand().toUri();
 
         return ResponseEntity.created(toPicture).body(toPicture);
     }
-
-
 
 //    @PutMapping(value = "/update/{id}",
 //            consumes = {MediaType.MULTIPART_FORM_DATA_VALUE},
@@ -162,7 +166,7 @@ public class ItemController {
 
 //    }
 
-//    @PutMapping(value = "/upd/{id}",
+    //    @PutMapping(value = "/upd/{id}",
 //    consumes = {MediaType.MULTIPART_FORM_DATA_VALUE},
 //    produces = {MediaType.APPLICATION_JSON_VALUE} )
 //    public ResponseEntity<Object> partialUpdateItem(@PathVariable("id") long id, @RequestBody ItemRequestDto itemRequestDto) {
@@ -182,11 +186,24 @@ public class ItemController {
 //    return ItemResponseDto(Item item);
 //
 //}
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Object> deleteFile(@PathVariable long id) {
-        itemService.deleteItem(id);
+    //Delete item werkt maar de file blijft nog in het mapje staan
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Object> deleteItemWithFile(@PathVariable long id, String filename) {
+        itemService.deleteItemWithFile(id, filename);
         return ResponseEntity.noContent().build();
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Object> deleteItem(@PathVariable long id) {
+        itemService.deleteItem(id);
+        return ResponseEntity.noContent().build();
+    }
+//werkt niet 404 not found
+    @DeleteMapping("delete/file")
+    public ResponseEntity<Object> deleteFile(@PathVariable String filename) throws IOException {
+        itemService.deleteFile(filename);
+        return ResponseEntity.noContent().build();
+
+    }
 }
 

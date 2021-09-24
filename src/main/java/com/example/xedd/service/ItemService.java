@@ -22,6 +22,8 @@ public interface ItemService {
     Item getItem(Long id);
     ItemResponseDto getItemById(long id);
     void deleteItem(long id);
+    void deleteItemWithFile(long id, String filename);
+
     long addItem(ItemRequestDto itemRequestDto);
     void updateItem(long id, Item item);
     Collection<Item>findAllByDifficulty(Difficulty difficulty);
