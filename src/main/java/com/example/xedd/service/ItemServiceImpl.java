@@ -100,6 +100,7 @@ public class ItemServiceImpl implements ItemService {
 //        if (copyLocation != null ) { newItemToStore.setLocation(copyLocation.toString()); }
         newItemToStore.setToPicture(toPicture);
         newItemToStore.setName(itemRequestDto.getName());
+        newItemToStore.setLatinName(itemRequestDto.getLatinName());
         newItemToStore.setDescription(itemRequestDto.getDescription());
         newItemToStore.setUploadedDate(createDate);
         Item saved = repository.save(newItemToStore);
@@ -131,6 +132,7 @@ public class ItemServiceImpl implements ItemService {
             responseDto.setId(stored.get().getId());
             responseDto.setFileName(stored.get().getFileName());
             responseDto.setName(stored.get().getName());
+            responseDto.setLatinName(stored.get().getLatinName());
             responseDto.setDescription(stored.get().getDescription());
             responseDto.setToPicture(stored.get().getToPicture());
             responseDto.setMediaType(stored.get().getMediaType());
@@ -148,10 +150,11 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public void updateItem(long id, Item item) {
+    public void updatItem(long id, Item item) {
         if (!repository.existsById(id)) throw new RecordNotFoundException();
         Item existingItem = repository.findById(id).get();
         existingItem.setName(item.getName());
+        existingItem.setLatinName(item.getLatinName());
         existingItem.setDescription(item.getDescription());
         existingItem.setToPicture(item.getToPicture());
         existingItem.setDifficulty(item.getDifficulty());
@@ -169,8 +172,8 @@ public void updateItem(ItemRequestDto itemRequestDto) {
             .path("/upload/")
             .path(file.getOriginalFilename())
             .toUriString();
-    //
-    Date createDate = new Date();
+    // Dit kan later gebruikt worden om weer te kunnen geven wanneer een object voor het laatst geupdate is.
+    //Date createDate = new Date();
     Path copyLocation = null;
     if (file != null) {
         originalFilename = StringUtils.cleanPath(file.getOriginalFilename());

@@ -7,6 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class ItemRequestDto {
     private Long id;
     private String name;
+    private String latinName;
     private String description;
     private MultipartFile file;
     private Difficulty difficulty;

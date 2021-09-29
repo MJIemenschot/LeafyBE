@@ -25,7 +25,7 @@ public interface ItemService {
     void deleteItemWithFile(long id, String filename);
 
     long addItem(ItemRequestDto itemRequestDto);
-    void updateItem(long id, Item item);
+    void updatItem(long id, Item item);
     Collection<Item>findAllByDifficulty(Difficulty difficulty);
     Collection<Item>findAllByLight(Light light);
     Collection<Item>findAllByWatering(Watering watering);

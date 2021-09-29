@@ -14,6 +14,7 @@ import java.util.Date;
 public class ItemResponseDto {
     private Long id;
     public String name;
+    public String latinName;
     public String description;
     private String toPicture;
     private MultipartFile file;

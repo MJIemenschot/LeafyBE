@@ -138,8 +138,8 @@ public class ItemController {
 
     //    //Werkt goed zonder nieuwe fileupload
     @PutMapping(value = "/{id}")
-    public ResponseEntity<Object> updateItem(@PathVariable("id") long id, @RequestBody Item item) {
-        itemService.updateItem(id, item);
+    public ResponseEntity<Object> updatItem(@PathVariable("id") long id, @RequestBody Item item) {
+        itemService.updatItem(id, item);
         return ResponseEntity.noContent().build();
     }
 

@@ -26,8 +26,8 @@ public class User {
     @Column
     private String email;
 
-    @Column
-    private String photo;
+//    @Column
+//    private String photo;
 
 ////    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
 ////      private Set <Item> items = new HashSet<>();
@@ -40,12 +40,12 @@ public class User {
             fetch = FetchType.EAGER)
     private Set<Authority> authorities = new HashSet<>();
 
-    public String getPhoto() {
-        return photo;
-    }
-    public void setPhoto(String photo) {
-        this.photo = photo;
-    }
+//    public String getPhoto() {
+//        return photo;
+//    }
+//    public void setPhoto(String photo) {
+//        this.photo = photo;
+//    }
     public void setAuthorities(Set<Authority> authorities) {
         this.authorities = authorities;
     }

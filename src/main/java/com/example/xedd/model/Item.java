@@ -13,12 +13,15 @@ public class Item {
     @GeneratedValue (strategy = GenerationType.AUTO)
     private long id;
     private String name;
+    private String latinName;
+
+    //@Lob
     private String description;
     private String toPicture;
     private String fileName;
     private String mediaType;
+    //private String picture;
     private String username;
-
 
     @Enumerated(value = EnumType.STRING)
     private Difficulty difficulty;
@@ -51,6 +54,7 @@ public class Item {
 
     public Item(long id,
                 String name,
+                String latinName,
                 String description,
                 String toPicture,
                 String fileName,
@@ -65,6 +69,7 @@ public class Item {
     ) {
         this.id = id;
         this.name = name;
+        this.latinName = latinName;
         this.description = description;
         this.toPicture = toPicture;
         this.uploadedDate = uploadedDate;
@@ -92,6 +97,14 @@ public class Item {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getLatinName() {
+        return latinName;
+    }
+
+    public void setLatinName(String latinName) {
+        this.latinName = latinName;
     }
 
     public String getDescription() {

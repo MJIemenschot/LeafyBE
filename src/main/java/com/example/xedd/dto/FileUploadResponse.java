@@ -7,11 +7,11 @@ public class FileUploadResponse {
 
     //private String title;
 
-    private String fileName;
+    public String fileName;
 
-    private String contentType;
+    public String contentType;
 
-    private String url;
+    public String url;
 
     public FileUploadResponse(
             //String title,
