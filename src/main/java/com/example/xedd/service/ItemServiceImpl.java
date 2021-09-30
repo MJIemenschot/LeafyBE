@@ -196,10 +196,10 @@ public void updateItem(ItemRequestDto itemRequestDto) {
         //ItemToStore.setUsername(itemRequestDto.getUserName());
         ItemToStore.setToPicture(toPicture);
         ItemToStore.setName(itemRequestDto.getName());
+        ItemToStore.setLatinName(itemRequestDto.getLatinName());
         ItemToStore.setDescription(itemRequestDto.getDescription());
         repository.save(ItemToStore);
     }
-
 }
 
 
@@ -228,7 +228,7 @@ public void updateItem(ItemRequestDto itemRequestDto) {
     public void deleteItemWithFile(long id, String filename) {
         Optional<Item> stored = repository.findById(id);
         if (stored.isPresent()) {
-            //String fileName = stored.get().getToPicture();
+            String fileName = stored.get().getToPicture();
             Path deleteLocation = Paths.get(uploads + File.separator + StringUtils.cleanPath(filename));
             try {
                 repository.deleteById(id);
@@ -261,9 +261,7 @@ public void updateItem(ItemRequestDto itemRequestDto) {
         if (stored.isPresent()) {
             String fileName = stored.get().getToPicture();
             Path path = this.uploads.resolve(fileName);
-
             Resource resource = null;
-
             try {
                 resource = new UrlResource(path.toUri());
                 return resource;
@@ -275,7 +273,5 @@ public void updateItem(ItemRequestDto itemRequestDto) {
         }
         return null;
     }
-
-
 }
 

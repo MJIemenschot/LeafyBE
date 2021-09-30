@@ -15,7 +15,8 @@ public class Item {
     private String name;
     private String latinName;
 
-    //@Lob
+//    @Lob
+//    @Column(name = "description", length = Integer.MAX_VALUE)
     private String description;
     private String toPicture;
     private String fileName;

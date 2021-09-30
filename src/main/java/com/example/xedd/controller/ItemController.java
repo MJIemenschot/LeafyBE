@@ -2,6 +2,7 @@ package com.example.xedd.controller;
 
 import com.example.xedd.dto.ItemRequestDto;
 //import com.example.xedd.dto.PostRequestDto;
+import com.example.xedd.dto.ItemResponseDto;
 import com.example.xedd.exception.NotFoundException;
 import com.example.xedd.model.*;
 
@@ -41,6 +42,7 @@ public class ItemController {
 
     private List<Item> items = new ArrayList<>();
     private ItemRequestDto itemRequestDTO;
+    private ItemResponseDto itemResponseDto;
     private Enum Difficulty;
 
 
@@ -112,13 +114,15 @@ public class ItemController {
 //        response.getOutputStream().write(Files.readAllBytes(path));
 //        response.getOutputStream().close();
 //    }
-//
+
 //    @GetMapping("item/display/{id}")
 //    void showImage(HttpServletResponse response, @PathVariable("id") long id)
 //            throws ServletException, IOException {
 //        if (!itemService.itemExistsById(id)) throw new NotFoundException();
 //        Item item = itemService.getItem(id);
+//        //deze kan getFile niet vinden
 //        File file = new File(item.getFile());
+//        //File file = new File(itemResponseDto.getFile());
 //        Path path = Paths.get(file.getAbsolutePath());
 //        //ByteArrayResource resource = new ByteArrayResource(Files.readAllBytes(path));
 //        response.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
@@ -148,7 +152,7 @@ public class ItemController {
             consumes = {MediaType.MULTIPART_FORM_DATA_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<Object> updateItem(ItemRequestDto itemRequestDto) {
-        //long newId =
+
         itemService.updateItem(itemRequestDto);
 
         URI toPicture = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
@@ -188,8 +192,8 @@ public class ItemController {
 //}
     //Delete item werkt maar de file blijft nog in het mapje staan
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Object> deleteItemWithFile(@PathVariable long id, String filename) {
-        itemService.deleteItemWithFile(id, filename);
+    public ResponseEntity<Object> deleteItemWithFile(@PathVariable long id, String toPicture) {
+        itemService.deleteItemWithFile(id, toPicture);
         return ResponseEntity.noContent().build();
     }
 
@@ -205,5 +209,6 @@ public class ItemController {
         return ResponseEntity.noContent().build();
 
     }
+
 }
 
