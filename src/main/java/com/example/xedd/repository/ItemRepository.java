@@ -6,6 +6,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.Collection;
+import java.util.List;
+
 @Repository
 public interface ItemRepository extends JpaRepository<Item, Long > {
     Collection<Item> findAllByName(String name);
@@ -16,8 +18,12 @@ public interface ItemRepository extends JpaRepository<Item, Long > {
     Collection<Item> findAllByUsername(String username);
 
 
+    List<Item>findAllByNameContainingOrderByNameDesc(String Item);
 
-//    Collection<Item> getItemById(Long id);
+    @Override
+    List<Item> findAll();
+
+    //    Collection<Item> getItemById(Long id);
 //    Collection<Item> findAllByDescription(String description);
 //    Collection<Item> findAllByNameAndDescription(String name, String description);
 
