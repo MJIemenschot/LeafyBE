@@ -35,7 +35,7 @@ public class PlantController {
 //    }
 @GetMapping("")
 public ResponseEntity<Object> getAll() {
-    List<Plant> files = plantService.findAll();
+    List<Plant> files = plantService.getPlants();
     return ResponseEntity.ok().body(files);
 }
 //    @GetMapping("/page")
@@ -57,8 +57,8 @@ public ResponseEntity<Object> getAll() {
 
 
     @GetMapping("/{id}")
-    public ResponseEntity<Object> getFileInfo(@PathVariable("id") long id) {
-        PlantResponseDto response = plantService.getFileById(id);
+    public ResponseEntity<Object> getPlantInfo(@PathVariable("id") long id) {
+        PlantResponseDto response = plantService.getPlantById(id);
         return ResponseEntity.ok().body(response);
     }
 
@@ -75,8 +75,8 @@ public ResponseEntity<Object> getAll() {
     @PostMapping(value = "",
             consumes = {MediaType.MULTIPART_FORM_DATA_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE} )
-    public ResponseEntity<Object> uploadFile(PlantRequestDto plantDto) {
-        long newId = plantService.uploadFile(plantDto);
+    public ResponseEntity<Object> addPlant(PlantRequestDto plantDto) {
+        long newId = plantService.addPlant(plantDto);
 
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
                 .buildAndExpand(newId).toUri();
@@ -96,8 +96,8 @@ public ResponseEntity<Object> getAll() {
     }
 
     @DeleteMapping("/files/{id}")
-    public ResponseEntity<Object> deleteFile(@PathVariable long id) {
-        plantService.deleteFile(id);
+    public ResponseEntity<Object> deletePlant(@PathVariable long id) {
+        plantService.deletePlant(id);
         return ResponseEntity.noContent().build();
     }
     @GetMapping(value = "/by/{name}")

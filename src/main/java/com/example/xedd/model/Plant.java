@@ -46,8 +46,17 @@ public class Plant {
     @Column(name = "uploaded_date")
     private Date uploadedDate;
 
+
     @Column(name = "uploaded_by_username")
     private String uploadedByUsername;
+
+//    @ManyToOne
+//    @Column(name = "user")
+//    private User user;
+
+//    public Plant(User user) {
+//        this.user = user;
+//    }
 
     public Plant() {
     }
@@ -182,5 +191,13 @@ public class Plant {
     public void setUploadedByUsername(String uploadedByUsername) {
         this.uploadedByUsername = uploadedByUsername;
     }
+
+//    public User getUser() {
+//        return user;
+//    }
+//
+//    public void setUser(User user) {
+//        this.user = user;
+//    }
 }
 

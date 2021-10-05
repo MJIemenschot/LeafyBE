@@ -29,8 +29,8 @@ public class User {
 //    @Column
 //    private String photo;
 
-////    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
-////      private Set <Item> items = new HashSet<>();
+//    @OneToMany( mappedBy = "user")
+//      private List <Plant> plants;
 
     @OneToMany(
             targetEntity = com.example.xedd.model.Authority.class,
@@ -73,4 +73,12 @@ public class User {
     public void removeAuthority(Authority authority) {
         this.authorities.remove(authority);
     }
+
+//    public List<Plant> getPlants() {
+//        return plants;
+//    }
+//
+//    public void setPlants(List<Plant> plants) {
+//        this.plants = plants;
+//    }
 }

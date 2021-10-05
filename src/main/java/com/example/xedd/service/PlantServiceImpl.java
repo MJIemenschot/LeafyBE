@@ -48,16 +48,45 @@ public class PlantServiceImpl implements PlantService {
     }
 
     @Override
-    public List<Plant> findAll() {
+    public List<Plant> getPlants() {
         return repository.findAll();
     }
 
+    @Override
+    public PlantResponseDto getPlantById(long id) {
+        Date createDate = new Date();
+        Optional<Plant> stored = repository.findById(id);
+
+        if (stored.isPresent()) {
+            URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+                    .buildAndExpand("download").toUri();
+
+            PlantResponseDto responseDto = new PlantResponseDto();
+            responseDto.setId(stored.get().getId());
+            responseDto.setFileName(stored.get().getFileName());
+            responseDto.setLatinName(stored.get().getLatinName());
+            responseDto.setName(stored.get().getName());
+            responseDto.setDescription(stored.get().getDescription());
+            responseDto.setMediaType(stored.get().getMediaType());
+            responseDto.setDownloadUri(uri.toString());
+            responseDto.setDifficulty(stored.get().getDifficulty());
+            responseDto.setLight(stored.get().getLight());
+            responseDto.setWatering(stored.get().getWatering());
+            responseDto.setFood(stored.get().getFood());
+            responseDto.setUploadedDate(createDate);
+            responseDto.setUploadedByUsername(stored.get().getUploadedByUsername());
+            return responseDto;
+        }
+        else {
+            throw new RecordNotFoundException();
+        }
+    }
 //    @Override
 //    public Page<Plant> getAll(Pageable pageable){
 //        return repository.getAll(pageable);
 //    }
 
-    public long uploadFile(PlantRequestDto plantDto) {
+    public long addPlant(PlantRequestDto plantDto) {
         Date createDate = new Date();
         MultipartFile file = plantDto.getFile();
 
@@ -117,6 +146,15 @@ public class PlantServiceImpl implements PlantService {
         //return saved.getId();
     }
 
+//    @Override
+//    public void updatePlant(Long id, Plant plant) {}
+//    public void updatePlant(Long id, Plant newPlant) {
+//        if(!plantRepository.existsById(id)) throw new RecordNotFoundException();
+//        Plant plant = plantRepository.findById(id).get();
+//
+//        plantRepository.save(plant);
+//    }
+
     @Override
     public Collection<Plant> findAllByNameContains(String name) {
         if (name.isEmpty()) {
@@ -158,7 +196,7 @@ public class PlantServiceImpl implements PlantService {
 
 
     @Override
-    public void deleteFile(long id) {
+    public void deletePlant(long id) {
         Optional<Plant> stored = repository.findById(id);
 
         if (stored.isPresent()) {
@@ -178,35 +216,7 @@ public class PlantServiceImpl implements PlantService {
         }
     }
 
-    @Override
-    public PlantResponseDto getFileById(long id) {
-        Date createDate = new Date();
-        Optional<Plant> stored = repository.findById(id);
 
-        if (stored.isPresent()) {
-            URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-                    .buildAndExpand("download").toUri();
-
-            PlantResponseDto responseDto = new PlantResponseDto();
-            responseDto.setId(stored.get().getId());
-            responseDto.setFileName(stored.get().getFileName());
-            responseDto.setLatinName(stored.get().getLatinName());
-            responseDto.setName(stored.get().getName());
-            responseDto.setDescription(stored.get().getDescription());
-            responseDto.setMediaType(stored.get().getMediaType());
-            responseDto.setDownloadUri(uri.toString());
-            responseDto.setDifficulty(stored.get().getDifficulty());
-            responseDto.setLight(stored.get().getLight());
-            responseDto.setWatering(stored.get().getWatering());
-            responseDto.setFood(stored.get().getFood());
-            responseDto.setUploadedDate(createDate);
-            responseDto.setUploadedByUsername(stored.get().getUploadedByUsername());
-            return responseDto;
-        }
-        else {
-            throw new RecordNotFoundException();
-        }
-    }
 
 //    @Override
 //    public boolean fileExistsById(long id) {

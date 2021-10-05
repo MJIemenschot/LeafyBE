@@ -14,14 +14,16 @@ import java.util.List;
 @Service
 public interface PlantService {
     void init();
-    List<Plant> findAll();
+//    List<Plant> findAll();
+    List<Plant> getPlants();
+
     //Page<Plant> getAll(Pageable pageable);
-    PlantResponseDto getFileById(long id);
+    PlantResponseDto getPlantById(long id);
 //    boolean fileExistsById(long id);
    // boolean existsPlantByIdExists(long id);
     void updatePlant(PlantRequestDto plantDto);
-    long uploadFile(PlantRequestDto plantDto);
-    void deleteFile(long id);
+    long addPlant(PlantRequestDto plantDto);
+    void deletePlant(long id);
     Resource downloadFile(long id);
     Collection<Plant> findAllByNameContains(String name);
     Collection<Plant> findAllByLatinNameContains(String latinName);
