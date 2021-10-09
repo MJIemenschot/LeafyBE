@@ -7,6 +7,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Collection;
 import java.util.List;
@@ -14,21 +15,22 @@ import java.util.List;
 @Service
 public interface PlantService {
     void init();
-//    List<Plant> findAll();
     List<Plant> getPlants();
-
-    //Page<Plant> getAll(Pageable pageable);
+    Page<Plant> findAllPlants(Pageable pageable);
     PlantResponseDto getPlantById(long id);
-//    boolean fileExistsById(long id);
-   // boolean existsPlantByIdExists(long id);
+    boolean existsById(long id);
     void updatePlant(PlantRequestDto plantDto);
+//    void updatPlant(long id,Plant plant);
+    void editoPlant(long id, Plant plant);
+    public Plant editPlant(long id, Plant plant);
+    public String uploadFile(MultipartFile file);
+    public void uploadImage(PlantRequestDto plantDto);
     long addPlant(PlantRequestDto plantDto);
     void deletePlant(long id);
     Resource downloadFile(long id);
-    Collection<Plant> findAllByNameContains(String name);
-    Collection<Plant> findAllByLatinNameContains(String latinName);
+    Collection<Plant> findAllByName(String query);
+    Collection<Plant> findAllByLatinName(String query);
     //List<Plant>getAllByUploadedByUsername(String uploadedByUserName);
-    List<Plant>getPlantsByLatinNameContainsAndNameContains(String name, String latinName);
     Collection<Plant> findAllByWatering(Watering watering);
     Collection<Plant> findAllByDifficulty(Difficulty difficulty);
     Collection<Plant> findAllByFood(Food food);

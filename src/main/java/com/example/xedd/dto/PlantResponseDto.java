@@ -1,9 +1,6 @@
 package com.example.xedd.dto;
 
-import com.example.xedd.model.Difficulty;
-import com.example.xedd.model.Food;
-import com.example.xedd.model.Light;
-import com.example.xedd.model.Watering;
+import com.example.xedd.model.*;
 import lombok.Data;
 
 import java.util.Date;
@@ -23,4 +20,23 @@ public class PlantResponseDto {
     private Food food;
     private String uploadedByUsername;
     private Date uploadedDate;
+
+    public static PlantResponseDto fromPlant(Plant plant) {
+        if (plant == null) return null;
+
+        var dto = new PlantResponseDto();
+        dto.id = plant.getId();
+        dto.name = plant.getName();
+        dto.description = plant.getDescription();
+        dto.fileName = plant.getFileName();
+        dto.mediaType = plant.getMediaType();
+        dto.downloadUri = plant.getDownloadUri();
+        dto.difficulty = plant.getDifficulty();
+        dto.light = plant.getLight();
+        dto.watering = plant.getWatering();
+        dto.food = plant.getFood();
+        dto.uploadedByUsername = plant.getUploadedByUsername();
+        dto.uploadedDate = plant.getUploadedDate();
+        return dto;
+    }
 }

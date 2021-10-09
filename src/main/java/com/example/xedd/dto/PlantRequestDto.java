@@ -1,9 +1,6 @@
 package com.example.xedd.dto;
 
-import com.example.xedd.model.Difficulty;
-import com.example.xedd.model.Food;
-import com.example.xedd.model.Light;
-import com.example.xedd.model.Watering;
+import com.example.xedd.model.*;
 import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
 @Data
@@ -17,4 +14,22 @@ public class PlantRequestDto {
     private Light light;
     private Watering watering;
     private Food food;
+
+    public void setFile(MultipartFile file) {
+        this.file = file;
+    }
+
+    public Plant toPlant() {
+        var plant = new Plant();
+        plant.setName(name);
+        plant.setLatinName(latinName);
+        plant.setDescription(description);
+        //plant.setFile( file);
+        plant.setDifficulty(difficulty);
+        plant.setLight(light);
+        plant.setWatering(watering);
+        plant.setFood(food);
+        return plant;
+
+    }
 }

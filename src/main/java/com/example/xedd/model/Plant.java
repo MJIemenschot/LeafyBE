@@ -31,6 +31,9 @@ public class Plant {
     @Column(name = "location")
     private String location;
 
+    @Column(name = "download_uri")
+    private String downloadUri;
+
     @Enumerated(value = EnumType.STRING)
     private Difficulty difficulty;
 
@@ -68,6 +71,7 @@ public class Plant {
                  String description,
                  String mediaType,
                  String location,
+                 String downloadUri,
                  Difficulty difficulty,
                  Light light, Food food,
                  Watering watering,
@@ -80,6 +84,7 @@ public class Plant {
         this.description = description;
         this.mediaType = mediaType;
         this.location = location;
+        this.downloadUri = downloadUri;
         this.difficulty = difficulty;
         this.light = light;
         this.food = food;
@@ -142,6 +147,14 @@ public class Plant {
 
     public void setLocation(String location) {
         this.location = location;
+    }
+
+    public String getDownloadUri() {
+        return downloadUri;
+    }
+
+    public void setDownloadUri(String downloadUri) {
+        this.downloadUri = downloadUri;
     }
 
     public Difficulty getDifficulty() {

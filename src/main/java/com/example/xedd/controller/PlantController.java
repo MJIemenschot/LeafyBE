@@ -1,7 +1,9 @@
 package com.example.xedd.controller;
 
+import com.beust.jcommander.internal.Console;
 import com.example.xedd.dto.PlantRequestDto;
 import com.example.xedd.dto.PlantResponseDto;
+import com.example.xedd.exception.FileStorageException;
 import com.example.xedd.model.*;
 import com.example.xedd.service.PlantService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,15 +12,22 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("api/v1/plants")
@@ -33,33 +42,36 @@ public class PlantController {
 //        Iterable<Plant> files = plantService.findAll();
 //        return ResponseEntity.ok().body(files);
 //    }
-@GetMapping("")
-public ResponseEntity<Object> getAll() {
-    List<Plant> files = plantService.getPlants();
-    return ResponseEntity.ok().body(files);
-}
-//    @GetMapping("/page")
-//    public Page<Plant> getPlantsPaged(@RequestParam("page") int page){
-//        var pageRequest  = PageRequest.of(page, 10);
-//        pageRequest.withSort(Sort.Direction.ASC, "name");
-//        return plantService.getAll(PageRequest.of(page, 10));
- //   }
-//    @GetMapping("/page")
-//    public List<PlantResponseDto> getPlants(){
-//        var request = new PageRequest(1, 10,Sort.DEFAULT_DIRECTION);
-//        var dtos = new ArrayList<PlantResponseDto>();
-//        var plants = plantService.getPlants();
-//
-//        for(Plant plant : plant){
-//            dtos.add(PlantResponseDto.fromPlant(plant));
-//        }return dtos;
-//    }
+    @GetMapping("")
+    public ResponseEntity<Object> getAllPlants() {
+        List<Plant> plants = plantService.getPlants();
+        return ResponseEntity.ok().body(plants);
+    }
+
+    @GetMapping("/page")
+    public Page<Plant> getPlantsPaged(@RequestParam("page") int page){
+        var pageRequest  = PageRequest.of(page, 10);
+        pageRequest.withSort(Sort.Direction.ASC, "name");
+        return plantService.findAllPlants(PageRequest.of(page, 10));
+    }
 
 
     @GetMapping("/{id}")
     public ResponseEntity<Object> getPlantInfo(@PathVariable("id") long id) {
         PlantResponseDto response = plantService.getPlantById(id);
         return ResponseEntity.ok().body(response);
+    }
+
+    @PostMapping("/file")
+    public ResponseEntity<Object> uploadFile(@RequestParam("file") MultipartFile file){
+        String fileName = plantService.uploadFile(file);
+        String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
+                .path("/files/")
+                .path(fileName)
+                .toUriString();
+
+        //FileResponse fileResponse = new FileResponse(fileName, fileDownloadUri, file.getContentType(), file.getSize());
+        return new ResponseEntity<Object>(fileName, HttpStatus.OK);
     }
 
     @GetMapping("/{id}/download")
@@ -83,6 +95,7 @@ public ResponseEntity<Object> getAll() {
 
         return ResponseEntity.created(location).body(location);
     }
+
     @PutMapping(value = "/update",
             consumes = {MediaType.MULTIPART_FORM_DATA_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE} )
@@ -95,6 +108,57 @@ public ResponseEntity<Object> getAll() {
         return ResponseEntity.created(location).body(location);
     }
 
+    //    //Werkt zonder nieuwe fileupload
+    @PutMapping(value = "edito/{id}")
+    public ResponseEntity<Object> editoPlant(@PathVariable("id") long id, @RequestBody Plant plant) {
+
+        plantService.editPlant(id, plant);
+        return ResponseEntity.noContent().build();
+    }
+    //415
+    @PutMapping("edit/{id}")
+    public PlantResponseDto editPlant(@PathVariable("id") long id, @RequestBody PlantRequestDto dto) {
+        var plant = plantService.editPlant(id, dto.toPlant());
+        return PlantResponseDto.fromPlant(plant);
+    }
+
+    //    @PutMapping
+//    public PlantResponseDto editPlant(@RequestBody PlantRequestDto dto) {
+//        var plant = plantService.savePlant(dto.toPlant());
+//        return PlantResponseDto.fromPlant(plant);
+//    }
+
+//    @PutMapping("/edit")
+//    public ResponseEntity<Plant> updatPlant(@PathVariable("id")Long id,
+//                                            @RequestParam("name") String name,
+//                                            @RequestParam(value = "latinName", required = false)String latinName,
+//                                            @RequestParam("description")String description,
+//                                            @RequestParam("difficulty") Difficulty difficulty,
+//                                            @RequestParam("watering") Watering watering,
+//                                            @RequestParam("light") Light light,
+//                                            @RequestParam("food") Food food,
+//                                            @RequestParam(value = "file", required = false) Optional<MultipartFile> file
+//                                            ){
+//        Plant newPlant = new Plant();
+//        newPlant.setName(name);
+//        newPlant.setLatinName(latinName);
+//        newPlant.setDescription(description);
+//        newPlant.setDifficulty(difficulty);
+//        newPlant.setWatering(watering);
+//        newPlant.setLight(light);
+//        newPlant.setFood(food);
+//        if((file.isPresent())){newPlant.setFileName(file.get().getOriginalFilename());}
+//        try {
+//            if((file.isPresent())){plantService.uploadFile(file.get());}
+////            if((file.isPresent())){fileStorageService.updateFile(file.get(),id);}
+//            plantService.updatPlant(id, newPlant);
+//            return ResponseEntity.noContent().build();
+//        }
+//        catch (Exception ex) {
+//            throw new RuntimeException();
+//        }
+//    }
+
     @DeleteMapping("/files/{id}")
     public ResponseEntity<Object> deletePlant(@PathVariable long id) {
         plantService.deletePlant(id);
@@ -102,23 +166,37 @@ public ResponseEntity<Object> getAll() {
     }
     @GetMapping(value = "/by/{name}")
     public ResponseEntity<Object> getPlantByName(@PathVariable("name") String name) {
-        return ResponseEntity.ok().body(plantService.findAllByNameContains(name));
+        return ResponseEntity.ok().body(plantService.findAllByName(name));
     }
     @GetMapping(value = "/byLatin/{latinName}")
     public ResponseEntity<Object> getPlantByLatinName(@PathVariable("latinName") String latinName) {
-        return ResponseEntity.ok().body(plantService.findAllByLatinNameContains(latinName));
+        return ResponseEntity.ok().body(plantService.findAllByLatinName(latinName));
     }
+//    @GetMapping
+//    public Collection<PlantResponseDto> findPlants(@RequestParam(value = "name", required = false ) String name,
+//                                             @RequestParam(value = "latinName", required = false) String latinName) {
+//        var dtos = new ArrayList<PlantResponseDto>();
+//
+//        Collection<Plant> plants;
+//        if (latinName == null) {
+//            plants = plantService.findAllByName(name);
+//        } else {
+//            plants = plantService.findAllByLatinName(latinName);
+//        }
+//        for (Plant plant : plants) {
+//            dtos.add(PlantResponseDto.fromPlant(plant));
+//        }
+//        return dtos;
+//    }
+
+
+
 
 //    @GetMapping(value = "/byUser/{uploadedByUserName}")
 //    public ResponseEntity<Object> getAllByUploadedByUsername(@PathVariable("uploadeByUserName") String uploadedByUserName) {
 //        return ResponseEntity.ok().body(plantService.getAllByUploadedByUsername(uploadedByUserName));
 //    }
 
-
-    @GetMapping(value = "/byNames/{name}")
-    public ResponseEntity<Object> getPlantsByLatinNameContainingAndNameContains(@PathVariable("latinName") String latinName, @PathVariable("name") String name) {
-        return ResponseEntity.ok().body(plantService.getPlantsByLatinNameContainsAndNameContains(latinName, name));
-    }
 
 
     @GetMapping("/byD/{difficulty}")

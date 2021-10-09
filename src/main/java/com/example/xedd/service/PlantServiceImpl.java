@@ -14,6 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -24,10 +25,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class PlantServiceImpl implements PlantService {
@@ -52,15 +50,16 @@ public class PlantServiceImpl implements PlantService {
         return repository.findAll();
     }
 
+
     @Override
     public PlantResponseDto getPlantById(long id) {
         Date createDate = new Date();
+
         Optional<Plant> stored = repository.findById(id);
 
         if (stored.isPresent()) {
             URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
                     .buildAndExpand("download").toUri();
-
             PlantResponseDto responseDto = new PlantResponseDto();
             responseDto.setId(stored.get().getId());
             responseDto.setFileName(stored.get().getFileName());
@@ -81,10 +80,11 @@ public class PlantServiceImpl implements PlantService {
             throw new RecordNotFoundException();
         }
     }
-//    @Override
-//    public Page<Plant> getAll(Pageable pageable){
-//        return repository.getAll(pageable);
-//    }
+    @Override
+    public Page<Plant> findAllPlants(Pageable pageable){
+        return repository.findAll(pageable);
+    }
+
 
     public long addPlant(PlantRequestDto plantDto) {
         Date createDate = new Date();
@@ -121,6 +121,7 @@ public class PlantServiceImpl implements PlantService {
         MultipartFile file = plantDto.getFile();
         String originalFilename = StringUtils.cleanPath(file.getOriginalFilename());
         Path copyLocation = this.uploads.resolve(file.getOriginalFilename());
+
         try {
             Files.copy(file.getInputStream(), copyLocation, StandardCopyOption.REPLACE_EXISTING);
         } catch (Exception e) {
@@ -143,35 +144,105 @@ public class PlantServiceImpl implements PlantService {
 
             repository.save(plantToUpdate);
         }
-        //return saved.getId();
     }
 
+    @Override
+    public Plant editPlant(long id, Plant plant) {return repository.save(plant);}
+
+    //zonder nieuwe file
+    @Override
+    public void editoPlant(long id, Plant plant) {
+        if(!repository.existsById(id)) throw new RecordNotFoundException();
+        Plant editedPlant = repository.findById(id).get();
+        //editedPlant.setFileName(originalFilename);
+        //editedPlant.setLocation(copyLocation.toString());
+        editedPlant.setName(plant.getName());
+        editedPlant.setLatinName(plant.getLatinName());
+        editedPlant.setDescription(plant.getDescription());
+        editedPlant.setDifficulty(plant.getDifficulty());
+        editedPlant.setWatering(plant.getWatering());
+        editedPlant.setFood(plant.getFood());
+        editedPlant.setLight(plant.getLight());
+
+        repository.save(editedPlant);
+
+    }
+    //upload image to plant
+    @Override
+    public void uploadImage(PlantRequestDto plantDto) {
+        MultipartFile file = plantDto.getFile();
+        String originalFilename = StringUtils.cleanPath(file.getOriginalFilename());
+        Path copyLocation = this.uploads.resolve(file.getOriginalFilename());
+        try {
+            Files.copy(file.getInputStream(), copyLocation, StandardCopyOption.REPLACE_EXISTING);
+        } catch (Exception e) {
+            throw new FileStorageException("Could not store file " + originalFilename + ". Please try again!");
+        }
+        var optionalPlant = repository.findById(plantDto.getId());
+        if (optionalPlant.isPresent()) {
+            var plant = optionalPlant.get();
+            plant.setFileName(originalFilename);
+            plant.setLocation(copyLocation.toString());
+            repository.save(plant);
+        } else {
+            throw new RecordNotFoundException();
+        }
+    }
+    //upload een file los
+    @Override
+    public String uploadFile(MultipartFile file) {
+
+        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+        try {
+            Path targetLocation = this.uploads.resolve(file.getOriginalFilename());
+            Files.copy(file.getInputStream(), targetLocation,StandardCopyOption.REPLACE_EXISTING);
+            return fileName;
+        }catch(IOException ex) {
+            throw new FileStorageException("Could not store file"+fileName + ". Please try again!",ex);
+        }
+    }
+
+
 //    @Override
-//    public void updatePlant(Long id, Plant plant) {}
-//    public void updatePlant(Long id, Plant newPlant) {
-//        if(!plantRepository.existsById(id)) throw new RecordNotFoundException();
-//        Plant plant = plantRepository.findById(id).get();
+//    public void updatPlant(long id, Plant newPlant) {
+//        if(!repository.existsById(id)) throw new RecordNotFoundException();
+//        Plant plant = repository.findById(id).get();
+//        plant.setName(newPlant.getName());
+//        plant.setLatinName(newPlant.getLatinName());
+//        plant.setDescription(newPlant.getDescription());
+//        plant.setDifficulty(newPlant.getDifficulty());
+//        plant.setWatering(newPlant.getWatering());
+//        plant.setLight(newPlant.getLight());
+//        plant.setFood(newPlant.getFood());
+//        String fileName = newPlant.getFileName();
+//        if(!(fileName==null)){
+//            plant.setLocation(newPlant.getFileName());}
 //
-//        plantRepository.save(plant);
+//        repository.save(plant);
 //    }
+//@Override
+//    public Collection<Plant> findAllByName(String query){ return repository.findAllByNameContainsIgnoreCase(query); }
+//
+//    @Override
+//    public Collection<Plant> findAllByLatinName(String query){ return repository.findAllByLatinNameContainsIgnoreCase(query); }
 
     @Override
-    public Collection<Plant> findAllByNameContains(String name) {
+    public Collection<Plant> findAllByName(String name) {
         if (name.isEmpty()) {
             //return (List<Plant>) repository.findAll();
             throw new RecordNotFoundException();
         } else {
-            return repository.findAllByNameContains(name);
+            return repository.findAllByNameContainsIgnoreCase(name);
         }
     }
 
     @Override
-    public Collection<Plant> findAllByLatinNameContains(String latinName) {
+    public Collection<Plant> findAllByLatinName(String latinName) {
         if (latinName.isEmpty()) {
             throw new RecordNotFoundException();
             //return (List<Plant>) repository.findAll();
         } else {
-            return repository.findAllByLatinNameContains(latinName);
+            return repository.findAllByLatinNameContainsIgnoreCase(latinName);
         }
     }
 //    @Override
@@ -183,16 +254,6 @@ public class PlantServiceImpl implements PlantService {
 //            return repository.getAllByUploadedByUsername(uploadedByUserName);
 //        }
 //    }
-
-    @Override
-    public List<Plant> getPlantsByLatinNameContainsAndNameContains(String name, String latinName) {
-        if (name.isEmpty() && latinName.isEmpty()) {
-            throw new RecordNotFoundException();
-            //return (List<Plant>) repository.findAll();
-        } else {
-            return repository.getPlantsByLatinNameContainsAndNameContains(name, latinName);
-        }
-    }
 
 
     @Override
@@ -215,13 +276,10 @@ public class PlantServiceImpl implements PlantService {
             throw new RecordNotFoundException();
         }
     }
-
-
-
-//    @Override
-//    public boolean fileExistsById(long id) {
-//        return repository.existsById(id);
-//    }
+    @Override
+    public boolean existsById(long id) {
+        return repository.existsById(id);
+    }
 
     @Override
     public Resource downloadFile(long id) {
