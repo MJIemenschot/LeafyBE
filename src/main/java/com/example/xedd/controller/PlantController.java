@@ -1,10 +1,10 @@
 package com.example.xedd.controller;
 
-import com.beust.jcommander.internal.Console;
 import com.example.xedd.dto.PlantRequestDto;
 import com.example.xedd.dto.PlantResponseDto;
-import com.example.xedd.exception.FileStorageException;
+import com.example.xedd.exception.RecordNotFoundException;
 import com.example.xedd.model.*;
+import com.example.xedd.repository.PlantRepository;
 import com.example.xedd.service.PlantService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -15,19 +15,13 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("api/v1/plants")
@@ -37,7 +31,12 @@ public class PlantController {
     @Autowired
     PlantService plantService;
 
-//    @GetMapping("")
+    @Autowired
+    PlantRepository repository;
+
+
+
+    //    @GetMapping("")
 //    public ResponseEntity<Object> getFiles() {
 //        Iterable<Plant> files = plantService.findAll();
 //        return ResponseEntity.ok().body(files);
@@ -62,6 +61,7 @@ public class PlantController {
         return ResponseEntity.ok().body(response);
     }
 
+
     @PostMapping("/file")
     public ResponseEntity<Object> uploadFile(@RequestParam("file") MultipartFile file){
         String fileName = plantService.uploadFile(file);
@@ -73,6 +73,7 @@ public class PlantController {
         //FileResponse fileResponse = new FileResponse(fileName, fileDownloadUri, file.getContentType(), file.getSize());
         return new ResponseEntity<Object>(fileName, HttpStatus.OK);
     }
+
 
     @GetMapping("/{id}/download")
     public ResponseEntity downloadFile(@PathVariable long id) {
@@ -107,20 +108,30 @@ public class PlantController {
 
         return ResponseEntity.created(location).body(location);
     }
-
-    //    //Werkt zonder nieuwe fileupload
-    @PutMapping(value = "edito/{id}")
-    public ResponseEntity<Object> editoPlant(@PathVariable("id") long id, @RequestBody Plant plant) {
-
-        plantService.editPlant(id, plant);
+    @PatchMapping("{id}")
+    public ResponseEntity<Object> partialUpdatePlant(PlantRequestDto plantRequestDto){
         return ResponseEntity.noContent().build();
     }
-    //415
-    @PutMapping("edit/{id}")
-    public PlantResponseDto editPlant(@PathVariable("id") long id, @RequestBody PlantRequestDto dto) {
-        var plant = plantService.editPlant(id, dto.toPlant());
-        return PlantResponseDto.fromPlant(plant);
-    }
+
+    //    //Werkt zonder nieuwe fileupload
+//    @PutMapping(value = "/{id}")
+//    public ResponseEntity<Object> editPlant(@PathVariable("id") long id, @RequestBody Plant plant) {
+//
+//        plantService.editPlant(plant);
+//        return ResponseEntity.noContent().build();
+//    }
+
+    //kan file niet vinden
+//    @PutMapping("/{id}/image")
+//    public void uploadPicture(@PathVariable("id") long id, @RequestParam("file") MultipartFile file) throws IOException {
+//        plantService.uploadImage(PlantRequestDto.file);
+//    }
+    //fout 415
+//    @PutMapping("edito/{id}")
+//    public PlantResponseDto editoPlant(@PathVariable("id") long id, @RequestBody PlantRequestDto dto) {
+//        var plant = plantService.editPlant(id, dto.toPlant());
+//        return PlantResponseDto.fromPlant(plant);
+//    }
 
     //    @PutMapping
 //    public PlantResponseDto editPlant(@RequestBody PlantRequestDto dto) {
@@ -164,14 +175,42 @@ public class PlantController {
         plantService.deletePlant(id);
         return ResponseEntity.noContent().build();
     }
-    @GetMapping(value = "/by/{name}")
-    public ResponseEntity<Object> getPlantByName(@PathVariable("name") String name) {
-        return ResponseEntity.ok().body(plantService.findAllByName(name));
+//    @GetMapping(value = "/by/{name}")
+//    public ResponseEntity<Object> getPlantByName(@PathVariable("name") String name) {
+//        return ResponseEntity.ok().body(plantService.findAllByName(name));
+//    }
+//    @GetMapping(value = "/byLatin/{latinName}")
+//    public ResponseEntity<Object> getPlantByLatinName(@PathVariable("latinName") String latinName) {
+//        return ResponseEntity.ok().body(plantService.findAllByLatinName(latinName));
+//    }
+
+    @GetMapping(value = "/search")
+    public ResponseEntity<Object> findPlants(@RequestParam(value = "query", required = false) String query) {
+        List<Plant> found = plantService.findByName(query);
+        if (found.isEmpty()) {
+            return ResponseEntity.ok().body(plantService.findByLatin(query));
+        }
+        else {
+            return ResponseEntity.ok().body(plantService.findByName(query));
+        }
+
+
     }
-    @GetMapping(value = "/byLatin/{latinName}")
-    public ResponseEntity<Object> getPlantByLatinName(@PathVariable("latinName") String latinName) {
-        return ResponseEntity.ok().body(plantService.findAllByLatinName(latinName));
-    }
+//@GetMapping(value = "/by")
+//public ResponseEntity<Object> findPlants(@PathVariable(value = "name", required = false ) String name,
+//                                         @PathVariable(value = "latinName", required = false) String latinName) {
+//    if (latinName == null) {
+//        return ResponseEntity.ok().body(plantService.findAllByName(name));
+//    } else{
+//        return ResponseEntity.ok().body(plantService.findAllByLatinName(latinName));
+//    }
+//        else {
+//
+//        }
+
+//}
+
+
 //    @GetMapping
 //    public Collection<PlantResponseDto> findPlants(@RequestParam(value = "name", required = false ) String name,
 //                                             @RequestParam(value = "latinName", required = false) String latinName) {

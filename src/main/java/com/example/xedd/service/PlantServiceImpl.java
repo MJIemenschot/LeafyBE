@@ -50,6 +50,30 @@ public class PlantServiceImpl implements PlantService {
         return repository.findAll();
     }
 
+    @Override
+    public List<Plant> findByName(String query) {
+        return repository.findPlantsByNameContainingIgnoreCase(query);
+    }
+    @Override
+    public List<Plant> findByLatin(String query) {
+        return repository.findPlantsByLatinNameContainingIgnoreCase(query);
+    }
+
+    //500 vindt alleen latinName
+//    @Override
+//    public List<Plant> findByName(String query) {
+//        List<Plant> found = repository.findPlantsByNameContainingIgnoreCase(query);
+//        if (found.isEmpty()) {
+//
+//            return (List<Plant>) repository.findPlantsByLatinNameContainingIgnoreCase(query);
+//
+//        } else {
+//            throw new RecordNotFoundException();
+//        }
+//    }
+
+
+
 
     @Override
     public PlantResponseDto getPlantById(long id) {
@@ -84,6 +108,45 @@ public class PlantServiceImpl implements PlantService {
     public Page<Plant> findAllPlants(Pageable pageable){
         return repository.findAll(pageable);
     }
+    //@Override
+//    public Collection<Plant> findAllByName(String query){ return repository.findAllByNameContainsIgnoreCase(query); }
+//
+//    @Override
+//    public Collection<Plant> findAllByLatinName(String query){ return repository.findAllByLatinNameContainsIgnoreCase(query); }
+
+//    @Override
+//    public Collection<Plant> findPlants(String name, String latinName) {
+//        if (name.isEmpty()) && (latinName.isEmpty()) throw new RecordNotFoundException();
+//        for (String name : String LatinName){
+//            //return (List<Plant>) repository.findAll();
+//            case "LatinName":
+//                repository.findAllByLatinNameContainsIgnoreCase(latinName);
+//                break;
+//            case : "name":
+//           repository.findAllByNameContainsIgnoreCase(name);
+ //       }
+  //  }
+//werkt
+//    @Override
+//    public Collection<Plant> findAllByName(String name) {
+//        if (name.isEmpty()) {
+//            //return (List<Plant>) repository.findAll();
+//            //return (Collection<Plant>) repository.findAllByLatinNameContainsIgnoreCase(query);
+//            throw new RecordNotFoundException();
+//        } else {
+//            return repository.findAllByNameContainsIgnoreCase(name);
+//        }
+//    }
+//
+//    @Override
+//    public Collection<Plant> findAllByLatinName(String latinName) {
+//        if (latinName.isEmpty()) {
+//            throw new RecordNotFoundException();
+//            //return (List<Plant>) repository.findAll();
+//        } else {
+//            return repository.findAllByLatinNameContainsIgnoreCase(latinName);
+//        }
+//    }
 
 
     public long addPlant(PlantRequestDto plantDto) {
@@ -145,29 +208,38 @@ public class PlantServiceImpl implements PlantService {
             repository.save(plantToUpdate);
         }
     }
+    public void PartialUpdatePlant(PlantRequestDto plantDto) {
+        Optional<Plant> stored = repository.findById(plantDto.getId());
+        if(stored.isPresent()) {
+            var nPlant = stored.get();
+            nPlant.setName(plantDto.getName());
+            repository.save(nPlant);
+        }
+    }
 
-    @Override
-    public Plant editPlant(long id, Plant plant) {return repository.save(plant);}
+//    @Override
+//    public Plant editoPlant(long id, Plant plant) {return repository.save(plant);}
 
     //zonder nieuwe file
-    @Override
-    public void editoPlant(long id, Plant plant) {
-        if(!repository.existsById(id)) throw new RecordNotFoundException();
-        Plant editedPlant = repository.findById(id).get();
-        //editedPlant.setFileName(originalFilename);
-        //editedPlant.setLocation(copyLocation.toString());
-        editedPlant.setName(plant.getName());
-        editedPlant.setLatinName(plant.getLatinName());
-        editedPlant.setDescription(plant.getDescription());
-        editedPlant.setDifficulty(plant.getDifficulty());
-        editedPlant.setWatering(plant.getWatering());
-        editedPlant.setFood(plant.getFood());
-        editedPlant.setLight(plant.getLight());
-
-        repository.save(editedPlant);
-
-    }
+//    @Override
+//    public void editPlant(Plant plant) {
+//        if(!repository.existsById(id)) throw new RecordNotFoundException();
+//        Plant editedPlant = repository.findById(id).get();
+//        //editedPlant.setFileName(originalFilename);
+//        //editedPlant.setLocation(copyLocation.toString());
+//        editedPlant.setName(plant.getName());
+//        editedPlant.setLatinName(plant.getLatinName());
+//        editedPlant.setDescription(plant.getDescription());
+//        editedPlant.setDifficulty(plant.getDifficulty());
+//        editedPlant.setWatering(plant.getWatering());
+//        editedPlant.setFood(plant.getFood());
+//        editedPlant.setLight(plant.getLight());
+//
+//        repository.save(editedPlant);
+//
+//    }
     //upload image to plant
+
     @Override
     public void uploadImage(PlantRequestDto plantDto) {
         MultipartFile file = plantDto.getFile();
@@ -220,31 +292,7 @@ public class PlantServiceImpl implements PlantService {
 //
 //        repository.save(plant);
 //    }
-//@Override
-//    public Collection<Plant> findAllByName(String query){ return repository.findAllByNameContainsIgnoreCase(query); }
-//
-//    @Override
-//    public Collection<Plant> findAllByLatinName(String query){ return repository.findAllByLatinNameContainsIgnoreCase(query); }
 
-    @Override
-    public Collection<Plant> findAllByName(String name) {
-        if (name.isEmpty()) {
-            //return (List<Plant>) repository.findAll();
-            throw new RecordNotFoundException();
-        } else {
-            return repository.findAllByNameContainsIgnoreCase(name);
-        }
-    }
-
-    @Override
-    public Collection<Plant> findAllByLatinName(String latinName) {
-        if (latinName.isEmpty()) {
-            throw new RecordNotFoundException();
-            //return (List<Plant>) repository.findAll();
-        } else {
-            return repository.findAllByLatinNameContainsIgnoreCase(latinName);
-        }
-    }
 //    @Override
 //    public List<Plant>getAllByUploadedByUsername(String uploadedByUserName) {
 //        if (uploadedByUserName.isEmpty()) {

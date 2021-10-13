@@ -20,11 +20,10 @@ public interface PlantRepository extends CrudRepository<Plant, Long> {
     Collection<Plant> findAllByLight(Light light);
 
     Collection<Plant>getAllByNameIgnoreCase(String name);
-    List<Plant>getPlantsByLatinNameContainsIgnoreCaseAndNameContainsIgnoreCase(String latinName, String name);
+    //List<Plant>getPlantsByLatinNameContainsIgnoreCaseAndNameContainsIgnoreCase(String query);
     //List<Plant>getAllByUploadedByUsername(String uploadedByUserName);
-    //Page<Plant>getAll(Pageable pageable);
-
-    //List<Plant>findPlantsByNameContainingOrderByNameDesc(String query);
+    List<Plant>findPlantsByNameContainingIgnoreCase(String query);
+    List<Plant>findPlantsByLatinNameContainingIgnoreCase(String query);
     List<Plant>findAll();
     Page<Plant>findAll(Pageable pageable);
 
