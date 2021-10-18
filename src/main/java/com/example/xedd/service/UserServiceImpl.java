@@ -76,6 +76,9 @@ return newUser.getUsername();
     public void updateUser(String username, User newUser) {
         if (!userRepository.existsById(username)) throw new UsernameNotFoundException(username);
         User user = userRepository.findById(username).get();
+        //
+        user.setUsername(newUser.getUsername());
+        //
         user.setPassword(newUser.getPassword());
         userRepository.save(user);
     }

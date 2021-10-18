@@ -20,6 +20,7 @@ public class PlantResponseDto {
     private Food food;
     private String uploadedByUsername;
     private Date uploadedDate;
+    private String location;
 
     public static PlantResponseDto fromPlant(Plant plant) {
         if (plant == null) return null;
@@ -37,6 +38,7 @@ public class PlantResponseDto {
         dto.food = plant.getFood();
         dto.uploadedByUsername = plant.getUploadedByUsername();
         dto.uploadedDate = plant.getUploadedDate();
+        dto.location = plant.getLocation();
         return dto;
     }
 }
