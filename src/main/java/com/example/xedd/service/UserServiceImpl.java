@@ -39,18 +39,10 @@ public class UserServiceImpl implements UserService{
         return userRepository.existsById(username);
     }
 
-//    @Override
-//    public String createUser(User user) {
-//        String randomString = RandomStringGenerator.generateAlphaNumeric(20);
-//        user.setApikey(randomString);
-//        user.setPassword(passwordEncoder.encode(user.getPassword()));
-//        User newUser = userRepository.save(user);
-//        return newUser.getUsername();
-//    }
     @Override
     public String createUser(User user) {
         if (userExists(user.getUsername())) {
-            throw new UsernameNotFoundException("Username is al in gebuik");
+            throw new UsernameNotFoundException("Deze gebruikersnaam is al in gebruik");
         }
         String randomString = RandomStringGenerator.generateAlphaNumeric(20);
         user.setEmail(user.getEmail());
@@ -63,7 +55,7 @@ public class UserServiceImpl implements UserService{
 
     User newUser = userRepository.save(user);
 
-return newUser.getUsername();
+    return newUser.getUsername();
     }
 
 

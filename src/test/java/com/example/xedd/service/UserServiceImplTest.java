@@ -53,7 +53,7 @@ public class UserServiceImplTest {
             when(userRepository.findById(username)).thenReturn(Optional.of(user));
             Optional<User> userOptional = userServiceImpl.getUser(username);
             assertTrue(userOptional.isPresent());
-            assertEquals(username, userOptional.get().getUsername());
+            assertEquals("Maria", userOptional.get().getUsername());
         }
 
         @Test
@@ -62,7 +62,7 @@ public class UserServiceImplTest {
             user.setUsername("Maria");
             String username = user.getUsername();
             when(userRepository.existsById(username)).thenReturn(true);
-            assertTrue(userRepository.existsById(username));
+            assertTrue(userRepository.existsById("Maria"));
         }
 
         @Test
@@ -134,8 +134,5 @@ public class UserServiceImplTest {
             userServiceImpl.removeAuthority(testUser.getUsername(), "ADMIN");
             verify(userRepository).save(testUser);
         }
-
-
-
     }
 

@@ -11,7 +11,7 @@ import java.util.Date;
 public class Plant {
     @Column
     @Id
-    @GeneratedValue (strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
     @Column(name = "file_name")
@@ -22,8 +22,13 @@ public class Plant {
 
     private String latinName;
 
-    @Column(name = "description")
+    @Column(name = "description", columnDefinition = "TEXT")
+    //@Lob geeft een nummer in de database:((
     private String description;
+
+    @Column(name = "care", columnDefinition = "TEXT")
+
+    private String care;
 
     @Column(name = "media_type")
     private String mediaType;
@@ -69,6 +74,7 @@ public class Plant {
                  String name,
                  String latinName,
                  String description,
+                 String care,
                  String mediaType,
                  String location,
                  String downloadUri,
@@ -82,6 +88,7 @@ public class Plant {
         this.name = name;
         this.latinName = latinName;
         this.description = description;
+        this.care = care;
         this.mediaType = mediaType;
         this.location = location;
         this.downloadUri = downloadUri;
@@ -131,6 +138,14 @@ public class Plant {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getCare() {
+        return care;
+    }
+
+    public void setCare(String care) {
+        this.care = care;
     }
 
     public String getMediaType() {
@@ -205,12 +220,4 @@ public class Plant {
         this.uploadedByUsername = uploadedByUsername;
     }
 
-//    public User getUser() {
-//        return user;
-//    }
-//
-//    public void setUser(User user) {
-//        this.user = user;
-//    }
 }
-

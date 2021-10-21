@@ -2,7 +2,11 @@ package com.example.xedd.dto;
 
 import com.example.xedd.model.*;
 import lombok.Data;
+import org.hibernate.engine.jdbc.ClobProxy;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.sql.Clob;
+
 @Data
 public class PlantRequestDto {
 
@@ -10,6 +14,7 @@ public class PlantRequestDto {
     private String name;
     private String latinName;
     private String description;
+    private String care;
     public MultipartFile file;
     private Difficulty difficulty;
     private Light light;
@@ -28,11 +33,13 @@ public class PlantRequestDto {
         this.file = file;
     }
 
+
     public Plant toPlant() {
         var plant = new Plant();
         plant.setName(name);
         plant.setLatinName(latinName);
         plant.setDescription(description);
+        plant.setCare(care);
         //plant.setFile(file);
         plant.setDifficulty(difficulty);
         plant.setLight(light);

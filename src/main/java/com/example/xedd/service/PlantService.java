@@ -22,28 +22,18 @@ public interface PlantService {
     boolean existsById(long id);
     void updatePlant(PlantRequestDto plantDto);
     void partialUpdatePlant(PlantRequestDto plantDto);
-//    void updatPlant(long id,Plant plant);
-
-   // public Plant editoPlant(long id, Plant plant);
     public String uploadFile(MultipartFile file);
     public void uploadImage(PlantRequestDto plantDto);
     long addPlant(PlantRequestDto plantDto);
     void deletePlant(long id);
     Resource downloadFile(long id);
-    //void partialUpdatePlant(long id, Map<String, String> fields, Difficulty difficulty, Watering watering, Light light, Food food);
-//    Collection<Plant> findAllByName(String name);
-//    Collection<Plant> findAllByLatinName(String latinName);
-//    Collection<Plant> getByName(String name);
-//    Collection<Plant> findAllByName(String query);
-//    Collection<Plant> findAllByLatinName(String query);
-
     List<Plant> findByName(String query);
     List<Plant> findByLatin(String query);
     //List<Plant>getAllByUploadedByUsername(String uploadedByUserName);
-    Collection<Plant> findAllByWatering(Watering watering);
-    Collection<Plant> findAllByDifficulty(Difficulty difficulty);
-    Collection<Plant> findAllByFood(Food food);
-    Collection<Plant> findAllByLight(Light light);
+    List<Plant> findAllByWatering(Watering watering);
+    List<Plant> findAllByDifficulty(Difficulty difficulty);
+    List<Plant> findAllByFood(Food food);
+    List<Plant> findAllByLight(Light light);
 
 
 

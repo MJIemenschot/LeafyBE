@@ -12,6 +12,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
@@ -35,6 +36,10 @@ public class PlantServiceImpl implements PlantService {
 
     @Autowired
     private PlantRepository repository;
+
+    public PlantServiceImpl(PlantRepository repository) {
+    }
+
 
     @Override
     public void init() {
@@ -74,6 +79,7 @@ public class PlantServiceImpl implements PlantService {
             responseDto.setLatinName(stored.get().getLatinName());
             responseDto.setName(stored.get().getName());
             responseDto.setDescription(stored.get().getDescription());
+            responseDto.setCare(stored.get().getCare());
             responseDto.setMediaType(stored.get().getMediaType());
             responseDto.setDownloadUri(uri.toString());
             responseDto.setDifficulty(stored.get().getDifficulty());
@@ -89,7 +95,7 @@ public class PlantServiceImpl implements PlantService {
             throw new RecordNotFoundException();
         }
     }
-    //Als het aantal planten toeneemt kan deze service geimplementeerd worden(werkt in postman)
+    //Als het aantal planten toeneemt kan deze service geimplementeerd worden(goedgekeurd door postman)
     @Override
     public Page<Plant> findAllPlants(Pageable pageable){
         return repository.findAll(pageable);
@@ -98,6 +104,7 @@ public class PlantServiceImpl implements PlantService {
 
 
     public long addPlant(PlantRequestDto plantDto) {
+
         Date createDate = new Date();
         MultipartFile file = plantDto.getFile();
 
@@ -115,6 +122,7 @@ public class PlantServiceImpl implements PlantService {
         newPlantToStore.setName(plantDto.getName());
         newPlantToStore.setLatinName(plantDto.getLatinName());
         newPlantToStore.setDescription(plantDto.getDescription());
+        newPlantToStore.setCare(plantDto.getCare());
         newPlantToStore.setDifficulty(plantDto.getDifficulty());
         newPlantToStore.setWatering(plantDto.getWatering());
         newPlantToStore.setFood(plantDto.getFood());
@@ -146,6 +154,7 @@ public class PlantServiceImpl implements PlantService {
             plantToUpdate.setName(plantDto.getName());
             plantToUpdate.setLatinName(plantDto.getLatinName());
             plantToUpdate.setDescription(plantDto.getDescription());
+            plantToUpdate.setCare(plantDto.getCare());
             plantToUpdate.setDifficulty(plantDto.getDifficulty());
             plantToUpdate.setWatering(plantDto.getWatering());
             plantToUpdate.setFood(plantDto.getFood());
@@ -163,6 +172,7 @@ public class PlantServiceImpl implements PlantService {
             nPlant.setName(plantDto.getName());
             nPlant.setLatinName(plantDto.getLatinName());
             nPlant.setDescription(plantDto.getDescription());
+            nPlant.setCare(plantDto.getCare());
             nPlant.setDifficulty(plantDto.getDifficulty());
             nPlant.setWatering(plantDto.getWatering());
             nPlant.setLight(plantDto.getLight());
@@ -171,8 +181,6 @@ public class PlantServiceImpl implements PlantService {
         }
     }
 
-
-
     //upload image to plant
 
     @Override
@@ -180,16 +188,18 @@ public class PlantServiceImpl implements PlantService {
         MultipartFile file = plantDto.getFile();
         String originalFilename = StringUtils.cleanPath(file.getOriginalFilename());
         Path copyLocation = this.uploads.resolve(file.getOriginalFilename());
+
         try {
             Files.copy(file.getInputStream(), copyLocation, StandardCopyOption.REPLACE_EXISTING);
         } catch (Exception e) {
             throw new FileStorageException("Could not store file " + originalFilename + ". Please try again!");
         }
-        var optionalPlant = repository.findById(plantDto.getId());
+        Optional<Plant> optionalPlant = repository.findById(plantDto.getId());
         if (optionalPlant.isPresent()) {
             var plant = optionalPlant.get();
             plant.setFileName(originalFilename);
             plant.setLocation(copyLocation.toString());
+
             repository.save(plant);
         } else {
             throw new RecordNotFoundException();
@@ -260,22 +270,22 @@ public class PlantServiceImpl implements PlantService {
 
 
     @Override
-    public Collection<Plant> findAllByDifficulty(Difficulty difficulty) {
+    public List<Plant> findAllByDifficulty(Difficulty difficulty) {
         return repository.findAllByDifficulty(difficulty);
     }
 
     @Override
-    public Collection<Plant> findAllByLight(Light light) {
+    public List<Plant> findAllByLight(Light light) {
         return repository.findAllByLight(light);
     }
 
     @Override
-    public Collection<Plant> findAllByWatering(Watering watering) {
+    public List<Plant> findAllByWatering(Watering watering) {
         return repository.findAllByWatering(watering);
     }
 
     @Override
-    public Collection<Plant> findAllByFood(Food food) {
+    public List<Plant> findAllByFood(Food food) {
         return repository.findAllByFood(food);
     }
 

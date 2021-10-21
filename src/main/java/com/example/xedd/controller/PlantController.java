@@ -47,28 +47,11 @@ public class PlantController {
         pageRequest.withSort(Sort.Direction.ASC, "name");
         return plantService.findAllPlants(PageRequest.of(page, 10));
     }
-
-
     @GetMapping("/{id}")
     public ResponseEntity<Object> getPlantInfo(@PathVariable("id") long id) {
         PlantResponseDto response = plantService.getPlantById(id);
         return ResponseEntity.ok().body(response);
     }
-
-
-    @PostMapping("/file")
-    public ResponseEntity<Object> uploadFile(@RequestParam("file") MultipartFile file){
-        String fileName = plantService.uploadFile(file);
-        String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path("/files/")
-                .path(fileName)
-                .toUriString();
-
-        //FileResponse fileResponse = new FileResponse(fileName, fileDownloadUri, file.getContentType(), file.getSize());
-        return new ResponseEntity<Object>(fileName, HttpStatus.OK);
-    }
-
-
     @GetMapping("/{id}/download")
     public ResponseEntity downloadFile(@PathVariable long id) {
         Resource resource = plantService.downloadFile(id);
@@ -82,7 +65,7 @@ public class PlantController {
     @PostMapping(value = "",
             consumes = {MediaType.MULTIPART_FORM_DATA_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE} )
-    public ResponseEntity<Object> addPlant(PlantRequestDto plantDto) {
+        public ResponseEntity<Object> addPlant(PlantRequestDto plantDto) {
         long newId = plantService.addPlant(plantDto);
 
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
@@ -90,23 +73,57 @@ public class PlantController {
 
         return ResponseEntity.created(location).body(location);
     }
+    //werkt onder 500 protest:((
+//    @PutMapping(value = "/update",
+//            consumes = {MediaType.MULTIPART_FORM_DATA_VALUE},
+//            produces = {MediaType.APPLICATION_JSON_VALUE} )
+//        public ResponseEntity<Object> updatePlant(PlantRequestDto plantDto) {
+//        plantService.updatePlant(plantDto);
+//
+//        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+//                .buildAndExpand().toUri();
+//
+//        return ResponseEntity.created(location).body(location);
+//    }
 
-    @PutMapping(value = "/update",
-            consumes = {MediaType.MULTIPART_FORM_DATA_VALUE},
-            produces = {MediaType.APPLICATION_JSON_VALUE} )
-    public ResponseEntity<Object> updatePlant(PlantRequestDto plantDto) {
-        plantService.updatePlant(plantDto);
+    @PatchMapping("{id}")
+    public ResponseEntity<Object> partialUpdatePlant(PlantRequestDto plantRequestDto){
+        plantService.partialUpdatePlant(plantRequestDto);
 
+        return ResponseEntity.noContent().build();
+    }
+    //werkt onder 500 protest:((
+    @PatchMapping("/file/{id}")
+    public ResponseEntity<Object> uploadImage(
+//            @RequestParam("file") MultipartFile file
+            PlantRequestDto plantRequestDto
+    ) {
+        plantService.uploadImage(plantRequestDto);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
                 .buildAndExpand().toUri();
 
         return ResponseEntity.created(location).body(location);
     }
+    //upload de image maar gooit rest van de data weg
+//    @PatchMapping("/file")
+//    public ResponseEntity<Object> uploadImage(
+//           @PathVariable("id") String id,
+//            PlantRequestDto plantRequestDto
+//    ) {
+//        plantService.uploadImage(plantRequestDto);
+//        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+//                .buildAndExpand().toUri();
+//
+//        return ResponseEntity.created(location).body(location);
+//    }
 
-    @PatchMapping("{id}")
-    public ResponseEntity<Object> partialUpdatePlant(PlantRequestDto plantRequestDto){
-        plantService.partialUpdatePlant(plantRequestDto);
-        return ResponseEntity.noContent().build();
+    @PostMapping("/file")
+    public ResponseEntity<Object> uploadFile(@RequestParam("file") MultipartFile file){
+        String fileName = plantService.uploadFile(file);
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+                .buildAndExpand().toUri();
+
+        return ResponseEntity.created(location).body(location);
     }
 
     @DeleteMapping("/files/{id}")
@@ -124,8 +141,6 @@ public class PlantController {
         else {
             return ResponseEntity.ok().body(plantService.findByName(query));
         }
-
-
     }
 
 //    @GetMapping(value = "/byUser/{uploadedByUserName}")
@@ -133,22 +148,20 @@ public class PlantController {
 //        return ResponseEntity.ok().body(plantService.getAllByUploadedByUsername(uploadedByUserName));
 //    }
 
-
-
     @GetMapping("/byD/{difficulty}")
-    public Collection<Plant> findAllByDifficulty(@PathVariable("difficulty") Difficulty difficulty) {
+    public List<Plant> findAllByDifficulty(@PathVariable("difficulty") Difficulty difficulty) {
         return plantService.findAllByDifficulty(difficulty);
     }
     @GetMapping("/byW/{watering}")
-    public Collection<Plant> findAllByWatering(@PathVariable("watering") Watering watering) {
+    public List<Plant> findAllByWatering(@PathVariable("watering") Watering watering) {
         return plantService.findAllByWatering(watering);
     }
     @GetMapping("/byL/{light}")
-    public Collection<Plant> findAllByLight(@PathVariable("light") Light light) {
+    public List<Plant> findAllByLight(@PathVariable("light") Light light) {
         return plantService.findAllByLight(light);
     }
     @GetMapping("/byF/{food}")
-    public Collection<Plant> findAllByFood(@PathVariable("food") Food food) {
+    public List<Plant> findAllByFood(@PathVariable("food") Food food) {
         return plantService.findAllByFood(food);
     }
 
