@@ -12,6 +12,7 @@ public class PlantResponseDto {
     private String latinName;
     private String description;
     private String care;
+    private String potting;
     private String fileName;
     private String mediaType;
     private String downloadUri;
@@ -31,6 +32,7 @@ public class PlantResponseDto {
         dto.name = plant.getName();
         dto.description = plant.getDescription();
         dto.care = plant.getCare();
+        dto.potting =plant.getPotting();
         dto.fileName = plant.getFileName();
         dto.mediaType = plant.getMediaType();
         dto.downloadUri = plant.getDownloadUri();

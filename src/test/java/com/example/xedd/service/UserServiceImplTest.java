@@ -59,16 +59,16 @@ public class UserServiceImplTest {
         @Test
         public void userExistsTest() {
             User user = new User();
-            user.setUsername("Maria");
+            user.setUsername("Hendrik");
             String username = user.getUsername();
             when(userRepository.existsById(username)).thenReturn(true);
-            assertTrue(userRepository.existsById("Maria"));
+            assertTrue(userRepository.existsById("Hendrik"));
         }
 
         @Test
         public void createUserTest() {
             User theUser = new User();
-            theUser.setUsername("Maria");
+            theUser.setUsername("Hendrik");
             theUser.setPassword(passwordEncoder.encode("1234567"));
             String passwordForm = passwordEncoder.encode(theUser.getPassword());
             when(userRepository.save(theUser)).thenReturn(theUser);
@@ -81,7 +81,7 @@ public class UserServiceImplTest {
         @Test
         public void deleteUserTest() {
             User user = new User();
-            user.setUsername("Maria");
+            user.setUsername("Hendrik");
             userServiceImpl.deleteUser(user.getUsername());
             verify(userRepository).deleteById(user.getUsername());
         }
@@ -89,10 +89,10 @@ public class UserServiceImplTest {
         @Test
         public void updateUserTest() {
             User theUser = new User();
-            theUser.setUsername("Maria");
+            theUser.setUsername("Hendrik");
             theUser.setPassword("password");
             User update = new User();
-            update.setUsername("Jose");
+            update.setUsername("Jan");
             update.setPassword("password");
             when(userRepository.existsById(update.getUsername())).thenReturn(true);
             when(userRepository.findById(update.getUsername())).thenReturn(Optional.of(theUser));

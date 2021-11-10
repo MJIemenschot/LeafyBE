@@ -24,6 +24,7 @@ public interface PlantRepository extends CrudRepository<Plant, Long> {
     List<Plant>findAll();
 
     Page<Plant>findAll(Pageable pageable);
+    boolean existsPlantByName(String name);
 
     boolean existsById(long id);
 }

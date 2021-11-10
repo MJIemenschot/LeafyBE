@@ -44,6 +44,7 @@ public void setup() {
     plantOne.setLatinName("Cacto");
     plantOne.setDescription("All cactusses are cool ");
     plantOne.setCare("Cactusses need sunlight ");
+    plantOne.setPotting("Cactusses need sand ");
     plantOne.setDifficulty(Difficulty.EASY);
     plantOne.setLight(Light.DIRECTSUN);
     plantOne.setWatering(Watering.MONTH);
@@ -56,6 +57,7 @@ public void setup() {
     plantTwo.setLatinName("Calathea");
     plantTwo.setDescription("All calatheas are cool ");
     plantTwo.setCare("Calatheas need care ");
+    plantTwo.setPotting("Calatheas need soil ");
     plantTwo.setDifficulty(Difficulty.HARD);
     plantTwo.setLight(Light.SUNNY);
     plantTwo.setWatering(Watering.TWODAYS);

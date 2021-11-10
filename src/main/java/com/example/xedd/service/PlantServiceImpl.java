@@ -80,6 +80,7 @@ public class PlantServiceImpl implements PlantService {
             responseDto.setName(stored.get().getName());
             responseDto.setDescription(stored.get().getDescription());
             responseDto.setCare(stored.get().getCare());
+            responseDto.setPotting(stored.get().getPotting());
             responseDto.setMediaType(stored.get().getMediaType());
             responseDto.setDownloadUri(uri.toString());
             responseDto.setDifficulty(stored.get().getDifficulty());
@@ -101,10 +102,15 @@ public class PlantServiceImpl implements PlantService {
         return repository.findAll(pageable);
     }
 
+    @Override
+    public boolean plantExists(String name){return repository.existsPlantByName(name);}
+
 
 
     public long addPlant(PlantRequestDto plantDto) {
-
+        if (plantExists(plantDto.getName())) {
+            throw new RuntimeException("Deze plant bestaat al");
+        }
         Date createDate = new Date();
         MultipartFile file = plantDto.getFile();
 
@@ -123,6 +129,7 @@ public class PlantServiceImpl implements PlantService {
         newPlantToStore.setLatinName(plantDto.getLatinName());
         newPlantToStore.setDescription(plantDto.getDescription());
         newPlantToStore.setCare(plantDto.getCare());
+        newPlantToStore.setPotting(plantDto.getPotting());
         newPlantToStore.setDifficulty(plantDto.getDifficulty());
         newPlantToStore.setWatering(plantDto.getWatering());
         newPlantToStore.setFood(plantDto.getFood());
@@ -155,6 +162,7 @@ public class PlantServiceImpl implements PlantService {
             plantToUpdate.setLatinName(plantDto.getLatinName());
             plantToUpdate.setDescription(plantDto.getDescription());
             plantToUpdate.setCare(plantDto.getCare());
+            plantToUpdate.setPotting(plantDto.getPotting());
             plantToUpdate.setDifficulty(plantDto.getDifficulty());
             plantToUpdate.setWatering(plantDto.getWatering());
             plantToUpdate.setFood(plantDto.getFood());
@@ -173,6 +181,7 @@ public class PlantServiceImpl implements PlantService {
             nPlant.setLatinName(plantDto.getLatinName());
             nPlant.setDescription(plantDto.getDescription());
             nPlant.setCare(plantDto.getCare());
+            nPlant.setPotting(plantDto.getPotting());
             nPlant.setDifficulty(plantDto.getDifficulty());
             nPlant.setWatering(plantDto.getWatering());
             nPlant.setLight(plantDto.getLight());
@@ -240,10 +249,7 @@ public class PlantServiceImpl implements PlantService {
             throw new RecordNotFoundException();
         }
     }
-    @Override
-    public boolean existsById(long id) {
-        return repository.existsById(id);
-    }
+
 
     @Override
     public Resource downloadFile(long id) {
@@ -266,6 +272,10 @@ public class PlantServiceImpl implements PlantService {
         }
 
         return null;
+    }
+    @Override
+    public boolean existsById(long id) {
+        return repository.existsById(id);
     }
 
 

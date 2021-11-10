@@ -42,22 +42,21 @@ public class UserServiceImpl implements UserService{
     @Override
     public String createUser(User user) {
         if (userExists(user.getUsername())) {
-            throw new UsernameNotFoundException("Deze gebruikersnaam is al in gebruik");
+            throw new RuntimeException("Deze gebruikersnaam is al in gebruik");
         }
         String randomString = RandomStringGenerator.generateAlphaNumeric(20);
         user.setEmail(user.getEmail());
         user.setApikey(randomString);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         //user.setId((getUsers().size())+1);
-        //Het volgende geef ik nu in de frontend mee
-//user.getAuthorities().clear();
-//user.addAuthority(new Authority(user.getUsername(),"ROLE_USER"));
+        //Het volgende geef ik nu in de frontend mee maar kan ook hier als volgt
+        //user.getAuthorities().clear();
+        //user.addAuthority(new Authority(user.getUsername(),"ROLE_USER"));
 
-    User newUser = userRepository.save(user);
+        User newUser = userRepository.save(user);
 
-    return newUser.getUsername();
+         return newUser.getUsername();
     }
-
 
     @Override
     public void deleteUser(String username) {
@@ -68,9 +67,9 @@ public class UserServiceImpl implements UserService{
     public void updateUser(String username, User newUser) {
         if (!userRepository.existsById(username)) throw new UsernameNotFoundException(username);
         User user = userRepository.findById(username).get();
-        //
+
         user.setUsername(newUser.getUsername());
-        //
+
         user.setPassword(newUser.getPassword());
         userRepository.save(user);
     }
@@ -87,6 +86,8 @@ public class UserServiceImpl implements UserService{
         if (!userRepository.existsById(username)) throw new UsernameNotFoundException(username);
         User user = userRepository.findById(username).get();
         user.addAuthority(new Authority(username, authority));
+        //user.getAuthorities().clear();
+        //user.addAuthority(new Authority(user.getUsername(),"ROLE_USER"));
         userRepository.save(user);
     }
 

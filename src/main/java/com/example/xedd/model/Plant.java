@@ -27,8 +27,10 @@ public class Plant {
     private String description;
 
     @Column(name = "care", columnDefinition = "TEXT")
-
     private String care;
+
+    @Column(name = "potting", columnDefinition = "TEXT")
+    private String potting;
 
     @Column(name = "media_type")
     private String mediaType;
@@ -75,6 +77,7 @@ public class Plant {
                  String latinName,
                  String description,
                  String care,
+                 String potting,
                  String mediaType,
                  String location,
                  String downloadUri,
@@ -89,6 +92,7 @@ public class Plant {
         this.latinName = latinName;
         this.description = description;
         this.care = care;
+        this.potting = potting;
         this.mediaType = mediaType;
         this.location = location;
         this.downloadUri = downloadUri;
@@ -146,6 +150,14 @@ public class Plant {
 
     public void setCare(String care) {
         this.care = care;
+    }
+
+    public String getPotting() {
+        return potting;
+    }
+
+    public void setPotting(String potting) {
+        this.potting = potting;
     }
 
     public String getMediaType() {

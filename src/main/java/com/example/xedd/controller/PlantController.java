@@ -73,26 +73,13 @@ public class PlantController {
 
         return ResponseEntity.created(location).body(location);
     }
-    //werkt onder 500 protest:((
-//    @PutMapping(value = "/update",
-//            consumes = {MediaType.MULTIPART_FORM_DATA_VALUE},
-//            produces = {MediaType.APPLICATION_JSON_VALUE} )
-//        public ResponseEntity<Object> updatePlant(PlantRequestDto plantDto) {
-//        plantService.updatePlant(plantDto);
-//
-//        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-//                .buildAndExpand().toUri();
-//
-//        return ResponseEntity.created(location).body(location);
-//    }
 
     @PatchMapping("{id}")
     public ResponseEntity<Object> partialUpdatePlant(PlantRequestDto plantRequestDto){
         plantService.partialUpdatePlant(plantRequestDto);
-
         return ResponseEntity.noContent().build();
     }
-    //werkt onder 500 protest:((
+
     @PatchMapping("/file/{id}")
     public ResponseEntity<Object> uploadImage(
 //            @RequestParam("file") MultipartFile file
@@ -104,18 +91,7 @@ public class PlantController {
 
         return ResponseEntity.created(location).body(location);
     }
-    //upload de image maar gooit rest van de data weg
-//    @PatchMapping("/file")
-//    public ResponseEntity<Object> uploadImage(
-//           @PathVariable("id") String id,
-//            PlantRequestDto plantRequestDto
-//    ) {
-//        plantService.uploadImage(plantRequestDto);
-//        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-//                .buildAndExpand().toUri();
-//
-//        return ResponseEntity.created(location).body(location);
-//    }
+
 
     @PostMapping("/file")
     public ResponseEntity<Object> uploadFile(@RequestParam("file") MultipartFile file){
@@ -150,12 +126,10 @@ public class PlantController {
 
     @GetMapping("/byD/{difficulty}")
     public List<Plant> findAllByDifficulty(@PathVariable("difficulty") Difficulty difficulty) {
-        return plantService.findAllByDifficulty(difficulty);
-    }
+        return plantService.findAllByDifficulty(difficulty);}
     @GetMapping("/byW/{watering}")
     public List<Plant> findAllByWatering(@PathVariable("watering") Watering watering) {
-        return plantService.findAllByWatering(watering);
-    }
+        return plantService.findAllByWatering(watering);}
     @GetMapping("/byL/{light}")
     public List<Plant> findAllByLight(@PathVariable("light") Light light) {
         return plantService.findAllByLight(light);

@@ -15,6 +15,7 @@ public class PlantRequestDto {
     private String latinName;
     private String description;
     private String care;
+    private String potting;
     public MultipartFile file;
     private Difficulty difficulty;
     private Light light;
@@ -40,6 +41,7 @@ public class PlantRequestDto {
         plant.setLatinName(latinName);
         plant.setDescription(description);
         plant.setCare(care);
+        plant.setPotting(potting);
         //plant.setFile(file);
         plant.setDifficulty(difficulty);
         plant.setLight(light);

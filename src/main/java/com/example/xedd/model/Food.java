@@ -1,5 +1,5 @@
 package com.example.xedd.model;
 
 public enum Food {
-    WEEK, TWOWEEKS, MONTH, NEVER_SPECIAL;
+    WEEK, TWOWEEKS, MONTH, YEAR, NEVER_SPECIAL;
 }

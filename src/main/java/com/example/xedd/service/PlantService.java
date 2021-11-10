@@ -20,6 +20,7 @@ public interface PlantService {
     Page<Plant> findAllPlants(Pageable pageable);
     PlantResponseDto getPlantById(long id);
     boolean existsById(long id);
+    boolean plantExists(String name);
     void updatePlant(PlantRequestDto plantDto);
     void partialUpdatePlant(PlantRequestDto plantDto);
     public String uploadFile(MultipartFile file);
