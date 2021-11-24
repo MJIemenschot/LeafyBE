@@ -13,6 +13,7 @@ import java.util.Map;
 
 @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
 @RestController
+@CrossOrigin("*")
 @RequestMapping(value = "api/v1/users")
 public class UserController {
 
@@ -56,7 +57,7 @@ public class UserController {
         return ResponseEntity.ok().body(userService.getAuthorities(username));
     }
 
-    @PostMapping(value = "/{username}/authorities")
+    @PatchMapping(value = "/{username}/authorities")
     public ResponseEntity<Object> addUserAuthority(@PathVariable("username") String username, @RequestBody Map<String, Object> fields) {
         try {
             String authorityName = (String) fields.get("authority");
@@ -67,6 +68,17 @@ public class UserController {
             throw new NotFoundException();
         }
     }
+//    @PatchMapping(value = "/{username}/authorities/{authority}")
+//    public ResponseEntity<Object> addUserAuthority(@PathVariable("username") String username, @PathVariable("authority") String authority) {
+//        try {
+//            String authorityName = (String) authority.get("authority");
+//            userService.addAuthority(username, authorityName);
+//            return ResponseEntity.noContent().build();
+//        }
+//        catch (Exception ex) {
+//            throw new NotFoundException();
+//        }
+//    }
 
     @DeleteMapping(value = "/{username}/authorities/{authority}")
     public ResponseEntity<Object> deleteUserAuthority(@PathVariable("username") String username, @PathVariable("authority") String authority) {

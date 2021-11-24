@@ -46,7 +46,7 @@ public class AuthenticatedController {
             );
         }
         catch (BadCredentialsException ex) {
-            throw new Exception("Incorrect username or password", ex);
+            throw new Exception("Onjuist mailadres of wachtwoord", ex);
         }
 
         final UserDetails userDetails = userDetailsService

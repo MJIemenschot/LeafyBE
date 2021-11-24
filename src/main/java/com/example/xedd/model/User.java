@@ -3,6 +3,7 @@ package com.example.xedd.model;
 
 import javax.persistence.*;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -25,8 +26,6 @@ public class User {
     @Column
     private String email;
 
-    @Column
-    private String photo;
 
     @OneToMany(
             targetEntity = com.example.xedd.model.Authority.class,
@@ -35,16 +34,28 @@ public class User {
             orphanRemoval = true,
             fetch = FetchType.EAGER)
     private Set<Authority> authorities = new HashSet<>();
+//
+    @OneToMany(
+            targetEntity = com.example.xedd.model.Plant.class,
+            mappedBy = "uploadedByUsername",
+            cascade = CascadeType.DETACH,
+            orphanRemoval = false,
+            fetch = FetchType.EAGER)
+    private List<Plant> plants;
 
-    public String getPhoto() {
-        return photo;
-    }
-    public void setPhoto(String photo) {
-        this.photo = photo;
-    }
+
     public void setAuthorities(Set<Authority> authorities) {
         this.authorities = authorities;
     }
+
+    public List<Plant> getPlants() {
+        return plants;
+    }
+
+    public void setPlants(List<Plant> plants) {
+        this.plants = plants;
+    }
+
     public String getUsername() { return username; }
     public void setUsername(String username) {
         this.username = username;
@@ -69,4 +80,6 @@ public class User {
     public void removeAuthority(Authority authority) {
         this.authorities.remove(authority);
     }
+
+
 }
