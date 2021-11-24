@@ -21,6 +21,8 @@ public class PlantRequestDto {
     private Light light;
     private Watering watering;
     private Food food;
+    //
+    private String uploadedByUsername;
 
     public PlantRequestDto(MultipartFile file) {
         this.file = file;
@@ -47,6 +49,7 @@ public class PlantRequestDto {
         plant.setLight(light);
         plant.setWatering(watering);
         plant.setFood(food);
+        plant.setUploadedByUsername(uploadedByUsername);
         return plant;
 
     }

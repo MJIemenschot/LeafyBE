@@ -96,7 +96,7 @@ public class PlantServiceImpl implements PlantService {
             throw new RecordNotFoundException();
         }
     }
-    //Als het aantal planten toeneemt kan deze service geimplementeerd worden(goedgekeurd door postman)
+    //Deze methode werkt en kan desgewenst worden geimplementeerd
     @Override
     public Page<Plant> findAllPlants(Pageable pageable){
         return repository.findAll(pageable);
@@ -135,7 +135,7 @@ public class PlantServiceImpl implements PlantService {
         newPlantToStore.setFood(plantDto.getFood());
         newPlantToStore.setLight(plantDto.getLight());
         newPlantToStore.setUploadedDate(createDate);
-        //newPlantToStore.setUploadedByUsername(plantDto.getUploadedByUserName);
+        newPlantToStore.setUploadedByUsername(plantDto.getUploadedByUsername());
 
         Plant saved = repository.save(newPlantToStore);
 
@@ -168,8 +168,6 @@ public class PlantServiceImpl implements PlantService {
             plantToUpdate.setFood(plantDto.getFood());
             plantToUpdate.setLight(plantDto.getLight());
             //plantToUpdate.setUploadedDate(createDate);
-            //newPlantToStore.setUploadedByUsername(plantDto.getUploadedByUserName);
-
             repository.save(plantToUpdate);
         }
     }

@@ -12,17 +12,17 @@ import java.util.List;
 
 @Repository
 public interface PlantRepository extends CrudRepository<Plant, Long> {
-    List<Plant> findAllByNameContainsIgnoreCase(String query);
-    List<Plant> findAllByLatinNameContainsIgnoreCase(String query);
+    //List<Plant> findAllByNameContainsIgnoreCase(String query);
+    //List<Plant> findAllByLatinNameContainsIgnoreCase(String query);
     List<Plant> findAllByWatering(Watering watering);
     List<Plant> findAllByDifficulty(Difficulty difficulty);
     List<Plant> findAllByFood(Food food);
     List<Plant> findAllByLight(Light light);
-    Collection<Plant>getAllByNameIgnoreCase(String name);
+    //Collection<Plant>getAllByNameIgnoreCase(String name);
     List<Plant>findPlantsByNameContainingIgnoreCase(String query);
     List<Plant>findPlantsByLatinNameContainingIgnoreCase(String query);
     List<Plant>findAll();
-
+    //List<Plant>getPlantByUploadedByUsername();
     Page<Plant>findAll(Pageable pageable);
     boolean existsPlantByName(String name);
 

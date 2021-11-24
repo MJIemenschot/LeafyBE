@@ -69,7 +69,7 @@ public class UserController {
         }
     }
 //    @PatchMapping(value = "/{username}/authorities/{authority}")
-//    public ResponseEntity<Object> adUserAuthority(@PathVariable("username") String username, @PathVariable("authority") String authority) {
+//    public ResponseEntity<Object> addUserAuthority(@PathVariable("username") String username, @PathVariable("authority") String authority) {
 //        try {
 //            String authorityName = (String) authority.get("authority");
 //            userService.addAuthority(username, authorityName);

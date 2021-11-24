@@ -2,6 +2,7 @@ package com.example.xedd.controller;
 
 import com.example.xedd.dto.PlantRequestDto;
 import com.example.xedd.dto.PlantResponseDto;
+import com.example.xedd.exception.NotFoundException;
 import com.example.xedd.exception.RecordNotFoundException;
 import com.example.xedd.model.*;
 import com.example.xedd.repository.PlantRepository;
@@ -107,7 +108,7 @@ public class PlantController {
         plantService.deletePlant(id);
         return ResponseEntity.noContent().build();
     }
-
+//hier een whileloop van maken met not found exceptie
     @GetMapping(value = "/search")
     public ResponseEntity<Object> findPlants(@RequestParam(value = "query", required = false) String query) {
         List<Plant> found = plantService.findByName(query);
@@ -116,6 +117,7 @@ public class PlantController {
         }
         else {
             return ResponseEntity.ok().body(plantService.findByName(query));
+            //throw new RecordNotFoundException();
         }
     }
 

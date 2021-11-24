@@ -60,13 +60,6 @@ public class Plant {
     @Column(name = "uploaded_by_username")
     private String uploadedByUsername;
 
-//    @ManyToOne
-//    @Column(name = "user")
-//    private User user;
-
-//    public Plant(User user) {
-//        this.user = user;
-//    }
 
     public Plant() {
     }
